@@ -9,11 +9,11 @@ class App extends Component {
     return (
       <div className="App">
         <Switch>
-          <Route exact path='/' render={() => {
-              return <Home />
+          <Route exact path='/' render={(props) => {
+              return <Home {...props} />
             }} />
 
-          <Route exact path='/login' render={() => {
+          <Route exact path='/login' render={(props) => {
               return <Login />
             }} />
 

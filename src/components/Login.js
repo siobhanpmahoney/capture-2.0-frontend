@@ -1,5 +1,8 @@
 import React from 'react'
-import {login_user} from '../services/api_calls'
+import {loginUserAction} from '../actions'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import {Redirect, withRouter} from 'react-router'
 
 class Login extends React.Component {
 
@@ -8,6 +11,19 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: ''
+    }
+  }
+
+  componentDidMount() {
+    if (!!this.props.auth.jwt_token) {
+      return <Redirect to='/' />
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log(prevProps)
+    if (!prevProps.auth.jwt_token && !!this.props.auth.jwt_token) {
+       return <Redirect to='/' />
     }
   }
 
@@ -21,11 +37,13 @@ class Login extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault()
-    login_user({username: this.state.username, password: this.state.password}).then(response => console.log(response))
+    const user_info = Object.assign({}, this.state)
+    this.props.loginUserAction(user_info)
   }
 
 
   render() {
+
     return (
       <div>
         <form>
@@ -38,4 +56,15 @@ class Login extends React.Component {
   }
 }
 
-export default Login
+function mapStateToProps(state, props) {
+  return {
+    user: state.user,
+    auth: state.auth
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({loginUserAction}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
