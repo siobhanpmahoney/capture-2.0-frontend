@@ -15,6 +15,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    console.log("mounted?")
     if (!!this.props.auth.jwt_token) {
       return <Redirect to='/' />
     }
@@ -43,7 +44,6 @@ class Login extends React.Component {
 
 
   render() {
-
     return (
       <div>
         <form>
@@ -67,4 +67,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({loginUserAction}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))

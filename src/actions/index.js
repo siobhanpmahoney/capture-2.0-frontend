@@ -31,18 +31,24 @@ export function setTokenAction(jwt) {
 // send request with token ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
   return(dispatch) => {
-    fetchCurrentUser(jwt)
-    .then(json => {
-      console.log('in fetchCurrentUserAction')
-      console.log('json - ', json)
-      return dispatch({
+    return fetchCurrentUser(jwt)
+    .then(json => dispatch({
       type: SET_CURRENT_USER,
       payload: json.user
     })
-  }
-  )
-  }
+  )}
 }
+// 
+// export function fetchPrice(currency) {
+//   return(dispatch) => {
+//     return fetchCoinPrice(currency)
+//     .then(json => dispatch({
+//       type: SET_PRICE,
+//       coin: currency,
+//       price: json.data.amount
+//     }))
+//   }
+// }
 
 // export function loginUserAction(user_data) {
 //   return(dispatch) => {

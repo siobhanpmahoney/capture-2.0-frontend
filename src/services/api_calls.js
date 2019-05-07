@@ -28,6 +28,7 @@ export const loginCurrentUser = (credentials) => {
 
 // passing JWT token to /profile, returns user data
 export const fetchCurrentUser = (jwt) => {
+  console.log("jwt: ", jwt)
   return fetch(`${API_ROOT}/profile`, {
     method: 'GET',
     headers: {

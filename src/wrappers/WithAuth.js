@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import {Redirect, withRouter} from 'react-router'
 import {loginUserAction, setTokenAction, fetchCurrentUserAction} from '../actions'
 
-const withAuth = (WrappedComponent) => {
+export default function (WrappedComponent) {
   class WithAuth extends React.Component {
 
     // constructor(props) {
@@ -12,10 +12,10 @@ const withAuth = (WrappedComponent) => {
     // }
 
     componentDidMount() {
-
+      console.log(this.props)
       if (!!this.props.auth.jwt_token && !this.props.user.id) {
         console.log("in if statement")
-        return this,props.fetchCurrentUserAction(this,props.auth.jwt_token)
+       this.props.fetchCurrentUserAction(this.props.auth.jwt_token)
       }
       else {
         console.log("hi")
@@ -23,13 +23,11 @@ const withAuth = (WrappedComponent) => {
     }
 
     render() {
-      debugger
       if (!!this.props.auth.jwt_token && !!this.props.user.id) {
         return (
-           <WrappedComponent {...this.props}/>
+           <WrappedComponent {...this.props} />
         )
       } else {
-        debugger
         return (
           <Redirect to="/login" />
         )
@@ -38,22 +36,13 @@ const withAuth = (WrappedComponent) => {
 
   }
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     user: state.user,
     auth: state.auth
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchCurrentUserAction: () => dispatch(fetchCurrentUserAction())
-  }
-  // return bindActionCreators({loginUserAction, fetchCurrentUserAction, setTokenAction}, dispatch)
+
+  return connect(mapStateToProps, {fetchCurrentUserAction})(WithAuth)
 }
-
-
-  return connect(mapStateToProps, mapDispatchToProps)(WrappedComponent)
-}
-
-export default withAuth
