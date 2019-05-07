@@ -27,6 +27,8 @@ export default function (WrappedComponent) {
         return (
            <WrappedComponent {...this.props} />
         )
+      } else if (!!this.props.auth.jwt_token) {
+        return <div>loading...</div>
       } else {
         return (
           <Redirect to="/login" />

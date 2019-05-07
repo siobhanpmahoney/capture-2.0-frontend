@@ -17,14 +17,20 @@ class Login extends React.Component {
   componentDidMount() {
     console.log("mounted?")
     if (!!this.props.auth.jwt_token) {
-      return <Redirect to='/' />
+      // return <Redirect to='/' />
+      return this.props.history.push("/")
     }
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps)
-    if (!prevProps.auth.jwt_token && !!this.props.auth.jwt_token) {
-       return <Redirect to='/' />
+    if (!!this.props.auth.jwt_token) {
+      console.log("in login")
+      console.log("prevProps.auth.jwt_token ,", prevProps.auth.jwt_token)
+       // return <Redirect to='/' />
+      this.props.history.push("/")
+    } else {
+      console.log("no change?")
+      console.log("this.props.auth", this.props.auth)
     }
   }
 

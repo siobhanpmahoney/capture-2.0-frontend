@@ -4,29 +4,42 @@ export const SET_TOKEN = 'SET_TOKEN'
 export const SET_CURRENT_USER = 'SET_CURRENT_USER'
 
 export function loginUserAction(login_credentials) {
-  console.log("in login ACTION, login_credentials: ", login_credentials)
   return(dispatch) => {
     return loginCurrentUser(login_credentials)
-    .then(json => {
-      console.log("in loginUserAction — ")
-      console.log(json)
-      console.log('back in login action')
-      console.log('was a jwt token returned?')
-      console.log('token: ', json.jwt)
-      return setTokenAction(json.jwt)
+    .then(json => dispatch({
+      type: SET_TOKEN,
+      payload: json.jwt
     })
+
+
+      // {return dispatch(setTokenAction(json.jwt))}
+
+    )
   }
 }
 
+// export function fetchPrice(currency) {
+//   return(dispatch) => {
+//     return fetchCoinPrice(currency)
+//     .then(json => dispatch({
+//       type: SET_PRICE,
+//       coin: currency,
+//       price: json.data.amount
+//     }))
+//   }
+// }
+
 // setting jwt token in userState
-export function setTokenAction(jwt) {
-  return(dispatch) => {
-    dispatch({
-      type: SET_TOKEN,
-      payload: jwt
-    })
-  }
-}
+// export function setTokenAction(jwt) {
+//   console.log("in setTokenAction")
+//   console.log("jwt param", jwt)
+//   return(dispatch) => {
+//     dispatch({
+//       type: SET_TOKEN,
+//       payload: jwt
+//     })
+//   }
+// }
 
 // send request with token ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
@@ -34,11 +47,11 @@ export function fetchCurrentUserAction(jwt) {
     return fetchCurrentUser(jwt)
     .then(json => dispatch({
       type: SET_CURRENT_USER,
-      payload: json.user
+      payload: json
     })
   )}
 }
-// 
+//
 // export function fetchPrice(currency) {
 //   return(dispatch) => {
 //     return fetchCoinPrice(currency)

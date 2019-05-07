@@ -5,10 +5,9 @@ export const user = (state = { id: null, username: null}, action) => {
 
     case SET_CURRENT_USER:
       let user_state = Object.assign({}, state)
-      user_state["username"] = action.payload.username
-      user_state["id"] = action.paylaod.id
+      user_state = action.payload.user
       state = user_state
-      console.log("in SET_CURRENT_USER")
+      console.log("in SET_CURRENT_USER", state)
       return state
       // userState["id"] = action.payload.id
       // userState["username"] = action.payload.username
