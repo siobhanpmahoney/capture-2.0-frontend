@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import {Redirect, withRouter} from 'react-router'
 import {loginUserAction, setTokenAction, fetchCurrentUserAction} from '../actions'
+import ls from 'local-storage'
+
 
 export default function (WrappedComponent) {
   class WithAuth extends React.Component {
@@ -12,23 +14,22 @@ export default function (WrappedComponent) {
     // }
 
     componentDidMount() {
-      console.log(this.props)
-      if (!!this.props.auth.jwt_token && !this.props.user.id) {
-        console.log("in if statement")
-       this.props.fetchCurrentUserAction(this.props.auth.jwt_token)
-      }
-      else {
-        console.log("hi")
-      }
+       if (ls.get('jwt_token') && !this.props.user.id) {
+         console.log("in if statement")
+        this.props.fetchCurrentUserAction(ls.get('jwt_token'))
+       }
+    //   else {
+    //     console.log("hi")
+    //   }
     }
 
     render() {
-      if (!!this.props.auth.jwt_token && !!this.props.user.id) {
+      if (ls.get('jwt_token') && !!this.props.user.id) {
         return (
-           <WrappedComponent {...this.props} />
+          <WrappedComponent {...this.props} />
         )
-      } else if (!!this.props.auth.jwt_token) {
-        return <div>loading...</div>
+      } else if (ls.get('jwt_token')) {
+        return <div>Loading</div>;
       } else {
         return (
           <Redirect to="/login" />
@@ -38,12 +39,12 @@ export default function (WrappedComponent) {
 
   }
 
-function mapStateToProps(state) {
-  return {
-    user: state.user,
-    auth: state.auth
+  function mapStateToProps(state) {
+    return {
+      user: state.user,
+      auth: state.auth
+    }
   }
-}
 
 
   return connect(mapStateToProps, {fetchCurrentUserAction})(WithAuth)

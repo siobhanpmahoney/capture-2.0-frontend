@@ -1,8 +1,11 @@
 import React from 'react'
-import {loginUserAction} from '../actions'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import ls from 'local-storage'
 import {Redirect, withRouter} from 'react-router'
+import {loginUserAction,fetchCurrentUserAction} from '../actions'
+// import NoAuth from '../wrappers/NoAuth'
+
 
 class Login extends React.Component {
 
@@ -13,24 +16,38 @@ class Login extends React.Component {
       password: ''
     }
   }
+  //
+  // componentDidMount() {
+  //   if (ls.get("jwt_token")) {
+  //     // return <Redirect to='/' />
+  //     return this.props.history.push("/")
+  //   }
+  // }
+  //
+  // componentDidUpdate(prevProps) {
+  //   if (!!this.props.auth.jwt_token) {
+  //     console.log("in login")
+  //     console.log("prevProps.auth.jwt_token ,", prevProps.auth.jwt_token)
+  //      // return <Redirect to='/' />
+  //     this.props.history.push("/")
+  //   } else {
+  //     console.log("no change?")
+  //     console.log("this.props.auth", this.props.auth)
+  //   }
+  // }
+
 
   componentDidMount() {
-    console.log("mounted?")
-    if (!!this.props.auth.jwt_token) {
-      // return <Redirect to='/' />
-      return this.props.history.push("/")
+    if (ls.get('jwt_token') && !this.props.user.id) {
+      this.props.fetchCurrentUserAction(ls.get('jwt_token'))
+    } else if (ls.get('jwt_token') && this.props.user.id) {
+      this.props.history.push("/")
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (!!this.props.auth.jwt_token) {
-      console.log("in login")
-      console.log("prevProps.auth.jwt_token ,", prevProps.auth.jwt_token)
-       // return <Redirect to='/' />
+    if (ls.get('jwt_token') && this.props.user.id) {
       this.props.history.push("/")
-    } else {
-      console.log("no change?")
-      console.log("this.props.auth", this.props.auth)
     }
   }
 
@@ -44,12 +61,20 @@ class Login extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault()
-    const user_info = Object.assign({}, this.state)
-    this.props.loginUserAction(user_info)
+    const user_info = Object.assign({}, this.state);
+    this.props.loginUserAction(user_info).then(jwtToken => {
+      if (jwtToken) {
+        ls.set('jwt_token', jwtToken)
+        return this.props.history.push("/")
+      }
+    })
   }
 
 
   render() {
+    if (ls.get('jwt_token') && this.props.user.id) {
+      return <Redirect to="/" />
+    }
     return (
       <div>
         <form>
@@ -70,7 +95,8 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({loginUserAction}, dispatch)
+  return bindActionCreators({loginUserAction,fetchCurrentUserAction}, dispatch)
 }
 
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NoAuth(Login)))
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))

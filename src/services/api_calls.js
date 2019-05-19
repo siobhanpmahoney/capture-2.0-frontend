@@ -1,4 +1,8 @@
+import ls from 'local-storage'
+
+
 const API_ROOT = 'http://localhost:3000/api/v1'
+
 
 // const token = localStorage.getItem('token')
 //
@@ -12,9 +16,7 @@ const login_headers = () => {
 
 
 export const loginCurrentUser = (credentials) => {
-  console.log("in API service fn")
   const user = {user: credentials}
-  console.log("user", user)
   return fetch(`${API_ROOT}/login`, {
     method: 'POST',
     headers: login_headers(),
@@ -28,7 +30,6 @@ export const loginCurrentUser = (credentials) => {
 
 // passing JWT token to /profile, returns user data
 export const fetchCurrentUser = (jwt) => {
-  console.log("jwt: ", jwt)
   return fetch(`${API_ROOT}/profile`, {
     method: 'GET',
     headers: {

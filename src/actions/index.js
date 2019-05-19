@@ -1,20 +1,22 @@
 import {loginCurrentUser, fetchCurrentUser} from '../services/api_calls'
+import ls from 'local-storage'
+
 
 export const SET_TOKEN = 'SET_TOKEN'
 export const SET_CURRENT_USER = 'SET_CURRENT_USER'
 
 export function loginUserAction(login_credentials) {
-  return(dispatch) => {
+  return (dispatch) => {
     return loginCurrentUser(login_credentials)
-    .then(json => dispatch({
-      type: SET_TOKEN,
-      payload: json.jwt
-    })
-
-
-      // {return dispatch(setTokenAction(json.jwt))}
-
-    )
+    .then(json => {
+      // ls.set("jwt_token", json.jwt)
+      // console.log(ls.get('jwt_token'))
+      dispatch({
+        type: SET_TOKEN,
+        payload: json.jwt
+      });
+      return json.jwt;
+    });
   }
 }
 
@@ -43,6 +45,7 @@ export function loginUserAction(login_credentials) {
 
 // send request with token ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
+  console.log("jwt", jwt)
   return(dispatch) => {
     return fetchCurrentUser(jwt)
     .then(json => dispatch({

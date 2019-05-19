@@ -6,7 +6,6 @@ import './App.css';
 
 class App extends Component {
   render() {
-    console.log("in App")
     return (
       <div className="App">
         <Switch>
