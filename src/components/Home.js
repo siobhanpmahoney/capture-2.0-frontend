@@ -13,29 +13,38 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    if(this.props.user.id) {
-      this.props.fetchJobAppsAction(this.props.user.id)
-      .then(res => console.log("in home props", this.props))
-    }
+    // if(this.props.user.id) {
+    //   this.props.fetchJobAppsAction(this.props.user.id)
+    //   .then(res => console.log("in home props", this.props.job_apps))
+    // }
+
   }
 
   render() {
+    if(!this.props.theMuseAppHash) {
+      return (
+        <div>
+          Loading...
+        </div>
+      )
 
-      this.props.fetchJobAppsAction(this.props.user.id)
-      .then(res => console.log("in home props", this.props))
+    } else {
+      return (
+        <div>
+          Home
+        </div>
+      )
+    }
 
-    return (
-      <div>
-        Home
-      </div>
-    )
   }
+
+
 }
 
 function mapStateToProps(state, props) {
   return {
     user: state.user,
-    job_apps: state.job_apps
+    theMuseAppHash: state.job_apps && state.job_apps["theMuseAppHash"]
   }
 }
 

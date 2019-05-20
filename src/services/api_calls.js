@@ -50,16 +50,3 @@ export const fetchUserJobApps = (user_id) => {
   })
   .then(response => response.json())
 }
-
-
-//
-// export const login_user = (credentials) => {
-//   return fetch(`${API_ROOT}/login`, {
-//     method: 'POST',
-//     headers: login_headers(),
-//     body: JSON.stringify({
-//       username: credentials.username,
-//       password: credentials.password
-//     })
-//   }).then(res => res.json())
-// }

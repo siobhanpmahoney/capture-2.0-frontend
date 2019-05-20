@@ -12,18 +12,20 @@ export const SET_APP_JOB_ID_LOOKUP = 'SET_APP_JOB_ID_LOOKUP'
 export function fetchCurrentUserAction(jwt) {
   return(dispatch) => {
     return fetchCurrentUser(jwt)
-    .then(json => dispatch({
-      type: SET_CURRENT_USER,
-      payload: json
+    .then(json => {
+      dispatch({
+        type: SET_CURRENT_USER,
+        payload: json
+      })
+      return json.user.id;
     })
-  )}
+  }
 }
 
 export function fetchJobAppsAction(user_id) {
   return(dispatch) => {
     return fetchUserJobApps(user_id)
     .then(json => {
-      console.log("json", json)
       let theMuseAppHash = {}
       let appJobDataHash = {}
 
