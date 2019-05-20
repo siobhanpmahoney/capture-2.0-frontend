@@ -2,7 +2,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import {Redirect, withRouter} from 'react-router'
-import {loginUserAction, setTokenAction, fetchCurrentUserAction} from '../actions'
+// import {loginUserAction, setTokenAction, fetchCurrentUserAction} from '../actions'
+import {fetchCurrentUserAction} from '../actions'
 import ls from 'local-storage'
 
 
@@ -42,7 +43,7 @@ export default function (WrappedComponent) {
   function mapStateToProps(state) {
     return {
       user: state.user,
-      auth: state.auth
+      // auth: state.auth
     }
   }
 

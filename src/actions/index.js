@@ -5,41 +5,18 @@ import ls from 'local-storage'
 export const SET_TOKEN = 'SET_TOKEN'
 export const SET_CURRENT_USER = 'SET_CURRENT_USER'
 
-export function loginUserAction(login_credentials) {
-  return (dispatch) => {
-    return loginCurrentUser(login_credentials)
-    .then(json => {
-      // ls.set("jwt_token", json.jwt)
-      // console.log(ls.get('jwt_token'))
-      dispatch({
-        type: SET_TOKEN,
-        payload: json.jwt
-      });
-      return json.jwt;
-    });
-  }
-}
-
-// export function fetchPrice(currency) {
-//   return(dispatch) => {
-//     return fetchCoinPrice(currency)
-//     .then(json => dispatch({
-//       type: SET_PRICE,
-//       coin: currency,
-//       price: json.data.amount
-//     }))
-//   }
-// }
-
-// setting jwt token in userState
-// export function setTokenAction(jwt) {
-//   console.log("in setTokenAction")
-//   console.log("jwt param", jwt)
-//   return(dispatch) => {
-//     dispatch({
-//       type: SET_TOKEN,
-//       payload: jwt
-//     })
+// export function loginUserAction(login_credentials) {
+//   return (dispatch) => {
+//     return loginCurrentUser(login_credentials)
+//     .then(json => {
+//       // ls.set("jwt_token", json.jwt)
+//       // console.log(ls.get('jwt_token'))
+//       dispatch({
+//         type: SET_TOKEN,
+//         payload: json.jwt
+//       });
+//       return json.jwt;
+//     });
 //   }
 // }
 

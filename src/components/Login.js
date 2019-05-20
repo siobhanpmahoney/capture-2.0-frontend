@@ -3,7 +3,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ls from 'local-storage'
 import {Redirect, withRouter} from 'react-router'
-import {loginUserAction,fetchCurrentUserAction} from '../actions'
+import {loginCurrentUser} from '../services/api_calls'
+// import {loginUserAction,fetchCurrentUserAction} from '../actions'
+import {fetchCurrentUserAction} from '../actions'
+
 // import NoAuth from '../wrappers/NoAuth'
 
 
@@ -59,16 +62,53 @@ class Login extends React.Component {
     })
   }
 
+  // onSubmit = (event) => {
+  //   event.preventDefault()
+  //   const user_info = Object.assign({}, this.state);
+  //   this.props.loginUserAction(user_info).then(jwtToken => {
+  //     if (jwtToken) {
+  //       ls.set('jwt_token', jwtToken)
+  //       return this.props.history.push("/")
+  //     }
+  //   })
+  // }
+
   onSubmit = (event) => {
     event.preventDefault()
     const user_info = Object.assign({}, this.state);
-    this.props.loginUserAction(user_info).then(jwtToken => {
+    loginCurrentUser(user_info)
+    .then(response => response.jwt)
+    .then(jwtToken => {
       if (jwtToken) {
         ls.set('jwt_token', jwtToken)
+        return ls.get('jwt_token')
+      } else {
+        return window.alert('error')
+      }
+    })
+    .then(jwt => this.props.fetchCurrentUserAction(jwt)) // returns user info
+    //.then (get user's apps)
+    .then(res => {
+      if (this.props.user.id) {
         return this.props.history.push("/")
       }
     })
   }
+
+  // export function loginUserAction(login_credentials) {
+  //   return (dispatch) => {
+  //     return loginCurrentUser(login_credentials)
+  //     .then(json => {
+  //       // ls.set("jwt_token", json.jwt)
+  //       // console.log(ls.get('jwt_token'))
+  //       dispatch({
+  //         type: SET_TOKEN,
+  //         payload: json.jwt
+  //       });
+  //       return json.jwt;
+  //     });
+  //   }
+  // }
 
 
   render() {
@@ -95,7 +135,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({loginUserAction,fetchCurrentUserAction}, dispatch)
+  return bindActionCreators({fetchCurrentUserAction}, dispatch)
 }
 
 // export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NoAuth(Login)))

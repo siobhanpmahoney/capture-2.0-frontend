@@ -2,7 +2,7 @@ import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {Redirect, withRouter} from 'react-router'
-import {loginUserAction} from '../actions'
+// import {loginUserAction} from '../actions'
 import WithAuth from '../wrappers/WithAuth'
 
 class Home extends React.Component {
@@ -28,7 +28,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({loginUserAction}, dispatch)
+  return bindActionCreators({}, dispatch)
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(Home)))
