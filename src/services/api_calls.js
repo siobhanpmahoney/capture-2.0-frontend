@@ -39,6 +39,18 @@ export const fetchCurrentUser = (jwt) => {
   .then(response => response.json())
 }
 
+export const fetchUserJobApps = (user_id) => {
+  const url = `${API_ROOT}/users/${user_id}`
+  const jwt = ls.get('jwt_token')
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${jwt}`
+    }
+  })
+  .then(response => response.json())
+}
+
 
 //
 // export const login_user = (credentials) => {

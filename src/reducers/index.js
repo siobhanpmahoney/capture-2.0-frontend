@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux'
 import {user} from './user'
-import {auth} from './auth'
+import {job_apps} from './job_apps'
 
 const rootReducer = combineReducers({
   user,
-  auth
+  job_apps
   // other reducers
 });
 

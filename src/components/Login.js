@@ -27,18 +27,6 @@ class Login extends React.Component {
   //   }
   // }
   //
-  // componentDidUpdate(prevProps) {
-  //   if (!!this.props.auth.jwt_token) {
-  //     console.log("in login")
-  //     console.log("prevProps.auth.jwt_token ,", prevProps.auth.jwt_token)
-  //      // return <Redirect to='/' />
-  //     this.props.history.push("/")
-  //   } else {
-  //     console.log("no change?")
-  //     console.log("this.props.auth", this.props.auth)
-  //   }
-  // }
-
 
   componentDidMount() {
     if (ls.get('jwt_token') && !this.props.user.id) {
@@ -95,22 +83,6 @@ class Login extends React.Component {
     })
   }
 
-  // export function loginUserAction(login_credentials) {
-  //   return (dispatch) => {
-  //     return loginCurrentUser(login_credentials)
-  //     .then(json => {
-  //       // ls.set("jwt_token", json.jwt)
-  //       // console.log(ls.get('jwt_token'))
-  //       dispatch({
-  //         type: SET_TOKEN,
-  //         payload: json.jwt
-  //       });
-  //       return json.jwt;
-  //     });
-  //   }
-  // }
-
-
   render() {
     if (ls.get('jwt_token') && this.props.user.id) {
       return <Redirect to="/" />
@@ -129,8 +101,7 @@ class Login extends React.Component {
 
 function mapStateToProps(state, props) {
   return {
-    user: state.user,
-    auth: state.auth
+    user: state.user
   }
 }
 

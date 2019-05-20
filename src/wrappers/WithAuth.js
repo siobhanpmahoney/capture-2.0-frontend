@@ -42,8 +42,7 @@ export default function (WrappedComponent) {
 
   function mapStateToProps(state) {
     return {
-      user: state.user,
-      // auth: state.auth
+      user: state.user
     }
   }
 

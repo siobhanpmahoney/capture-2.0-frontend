@@ -1,28 +1,15 @@
-import {loginCurrentUser, fetchCurrentUser} from '../services/api_calls'
+import {loginCurrentUser, fetchCurrentUser,fetchUserJobApps} from '../services/api_calls'
 import ls from 'local-storage'
 
 
-export const SET_TOKEN = 'SET_TOKEN'
 export const SET_CURRENT_USER = 'SET_CURRENT_USER'
+export const SET_APP_ARR = 'SET_APP_ARR'
+export const SET_MUSE_ID_LOOKUP = 'SET_MUSE_ID_LOOKUP'
+export const SET_APP_JOB_ID_LOOKUP = 'SET_APP_JOB_ID_LOOKUP'
 
-// export function loginUserAction(login_credentials) {
-//   return (dispatch) => {
-//     return loginCurrentUser(login_credentials)
-//     .then(json => {
-//       // ls.set("jwt_token", json.jwt)
-//       // console.log(ls.get('jwt_token'))
-//       dispatch({
-//         type: SET_TOKEN,
-//         payload: json.jwt
-//       });
-//       return json.jwt;
-//     });
-//   }
-// }
 
-// send request with token ==> returns user data => store in redux
+// make request for user data with jwt token as param ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
-  console.log("jwt", jwt)
   return(dispatch) => {
     return fetchCurrentUser(jwt)
     .then(json => dispatch({
@@ -31,24 +18,44 @@ export function fetchCurrentUserAction(jwt) {
     })
   )}
 }
-//
-// export function fetchPrice(currency) {
-//   return(dispatch) => {
-//     return fetchCoinPrice(currency)
-//     .then(json => dispatch({
-//       type: SET_PRICE,
-//       coin: currency,
-//       price: json.data.amount
-//     }))
-//   }
-// }
 
-// export function loginUserAction(user_data) {
-//   return(dispatch) => {
-//     dispatch({
-//       type: LOGIN_USER,
-//       payload: user_data
-//     })
-//   }
-//
-// }
+export function fetchJobAppsAction(user_id) {
+  return(dispatch) => {
+    return fetchUserJobApps(user_id)
+    .then(json => {
+      console.log("json", json)
+      let theMuseAppHash = {}
+      let appJobDataHash = {}
+
+      json["apps"].forEach((a) => {
+        let muse_id = ""
+        json["jobs"].find((j) => {
+          if (j.id == a.job_id) {
+            appJobDataHash[a.id] = j
+            muse_id = j.muse_id
+          }
+        })
+        theMuseAppHash[muse_id] = a.id
+      })
+
+      dispatch({
+        type: SET_APP_ARR,
+        payload: json["apps"]
+      })
+
+      dispatch({
+        type: SET_MUSE_ID_LOOKUP,
+        payload: theMuseAppHash
+      })
+
+      dispatch({
+        type: SET_APP_JOB_ID_LOOKUP,
+        payload: appJobDataHash
+      })
+
+
+
+
+    })
+  }
+}

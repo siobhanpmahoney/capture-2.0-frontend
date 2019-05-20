@@ -9,19 +9,6 @@ import ls from 'local-storage'
 
 export default function (WrappedComponent) {
   class NoAuth extends React.Component {
-    // componentWillMount() {
-    //   if (this.props.authenticated && !!this.props.user_info.selectedGroup) {
-    //       this.props.history.push('/profile');
-    //   } else if (this.props.authenticated && !this.props.user_info.selectedGroup && this.props.auth.userGroupList.length > 1) {
-    //     this.props.history.push('/select-group')
-    //   }
-    // }
-    //
-    // componentWillUpdate(nextProps) {
-    //   if (nextProps.authenticated) {
-    //       this.props.history.push('/profile');
-    //     }
-    // }
 
     componentWillMount() {
        if (ls.get('jwt_token') && !this.props.user.id) {
@@ -62,7 +49,6 @@ export default function (WrappedComponent) {
   function mapStateToProps(state) {
     return {
       user: state.user,
-      auth: state.auth
     }
   }
 
