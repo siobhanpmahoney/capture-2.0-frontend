@@ -2,8 +2,13 @@ import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {Redirect, withRouter} from 'react-router'
-import {fetchJobAppsAction} from '../actions'
+
 import WithAuth from '../wrappers/WithAuth'
+import {fetchJobAppsAction} from '../actions'
+import {convertAttrStrForDisplay} from '../utils/pref_regex'
+import {searchJobRequest} from '../services/theMuseApi'
+
+import JobSearchList from './searchJobs/JobSearchList'
 
 class Home extends React.Component {
 
@@ -20,31 +25,42 @@ class Home extends React.Component {
 
   }
 
-  render() {
-    if(!this.props.theMuseAppHash) {
-      return (
-        <div>
-          Loading...
-        </div>
-      )
 
-    } else {
-      return (
-        <div>
-          Home
-        </div>
-      )
-    }
+// converting user preference attributes to object
+  convertsAttrToObj = () => {
+    const {pref_locations, pref_categories, pref_levels} = this.props.user
+    console.log(convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels}))
+    return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
+  }
 
+  fetchesJobSearchResults = () => {
+    return searchJobRequest(this.convertsAttrToObj())
   }
 
 
+  render() {
+    if(!this.props.job_apps) {
+      return <div> Loading...</div>
+    }
+    else {
+      this.fetchesJobSearchResults()
+      const searchPref = this.convertsAttrToObj()
+      return (
+        <div>
+          Home
+          url: {this.fetchesJobSearchResults()}
+
+          <JobSearchList searchPref={searchPref} />
+        </div>
+      )
+    }
+  }
 }
 
 function mapStateToProps(state, props) {
   return {
     user: state.user,
-    theMuseAppHash: state.job_apps && state.job_apps["theMuseAppHash"]
+    job_apps: state.job_apps
   }
 }
 

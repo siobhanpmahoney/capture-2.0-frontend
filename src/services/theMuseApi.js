@@ -1,8 +1,17 @@
 import {MUSE_KEY} from './keys.js'
+import {convertDisplayToQueryParam} from '../utils/pref_regex'
 
-const MUSE_API = "http://https://www.themuse.com/api/public/jobs"
+const MUSE_API = `https://www.themuse.com/api/public/jobs?api_key=${MUSE_KEY}`
 
-export const searchJobs = (param_obj) => {
-  // param_obj = {categories: "<cateogry list>", levels: "<levels>", locations: "<locations>"}
-  
+
+// param obj as arg
+export const searchJobRequest = (param_obj) => {
+  console.log(param_obj)
+  let params = convertDisplayToQueryParam(param_obj)
+  console.log("params", params)
+  let url = `${MUSE_API}&page=1${params}`
+  console.log(url)
 }
+
+
+// db => UI (state) => query param
