@@ -15,26 +15,68 @@ class Home extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      jobSearchResults: [],
+      resPageCount: 0,
+    }
   }
 
   componentDidMount() {
-    // if(this.props.user.id) {
-    //   this.props.fetchJobAppsAction(this.props.user.id)
-    //   .then(res => console.log("in home props", this.props.job_apps))
-    // }
-
+    this.fetchesJobSearchResults()
   }
 
 
 // converting user preference attributes to object
   convertsAttrToObj = () => {
     const {pref_locations, pref_categories, pref_levels} = this.props.user
-    console.log(convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels}))
     return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
   }
 
   fetchesJobSearchResults = () => {
-    return searchJobRequest(this.convertsAttrToObj())
+    const params = this.convertsAttrToObj()
+    searchJobRequest(params, 1)
+    .then(response => {
+      console.log(response.results.length)
+      let res = this.formatsJobResultsObj(response.results)
+      return this.setState({
+        jobSearchResults: res,
+        resPageCount: response.page_count
+      }, () => console.log(this.state))
+    })
+    // .then(response => response.results.map((r) => {
+    //   return {name: r.name,
+    //   publication_date: new Intl.DateTimeFormat('en-US').format(new Date(r.publication_date)),
+    //   id: r.id,
+    //   locations: r.locations.map((l) => l.name).join(" / "),
+    //   levels: r.levels.map((l) => l.name).join( " / "),
+    //   company_name: r.company.name,
+    //   company_id: r.company.id,
+    //   categories: r.categories.map((m) => m.name).join( " / ")
+    // }
+    // }))
+    // .then(res => this.setState({
+    //   jobSearchResults: res
+    // }))
+  }
+
+  // add results pages to state?
+  // check if state < 20 items
+  // check if page number is > 1
+  // repeat fetch and check against saved jobs and add to state until state.length === 20
+
+  formatsJobResultsObj = (response) => {
+    return response.map((r) => {
+      // note: does NOT include contents: r.contents,
+      return {name: r.name,
+        landing_page: r.refs.landing_page,
+        publication_date: new Intl.DateTimeFormat('en-US').format(new Date(r.publication_date)),
+        muse_id: r.id,
+        locations: r.locations.map((l) => l.name).join(" / "),
+        levels: r.levels.map((l) => l.name).join( " / "),
+        company_name: r.company.name,
+        company_muse_id: r.company.id,
+        categories: r.categories.map((m) => m.name).join( " / ")
+    }})
   }
 
 
@@ -43,14 +85,11 @@ class Home extends React.Component {
       return <div> Loading...</div>
     }
     else {
-      this.fetchesJobSearchResults()
-      const searchPref = this.convertsAttrToObj()
+      console.log(this.state)
       return (
         <div>
           Home
-          url: {this.fetchesJobSearchResults()}
-
-          <JobSearchList searchPref={searchPref} />
+          <JobSearchList jobSearchResults = {this.state.jobSearchResults}/>
         </div>
       )
     }
