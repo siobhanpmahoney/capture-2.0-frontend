@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Home from './components/Home'
 import Login from './components/Login'
+import JobResultDetail from './components/searchJobs/JobResultDetail'
 import './App.css';
 
 class App extends Component {
@@ -11,6 +12,10 @@ class App extends Component {
         <Switch>
           <Route exact path='/' render={(routerProps) => {
               return <Home history={routerProps.history} />
+            }} />
+
+          <Route path="/search/:museJobId" render={(routerProps) => {
+              return <JobResultDetail museJobId={routerProps.match.params.jobId} history={routerProps.history} />
             }} />
 
           <Route exact path='/login' render={(routerProps) => {

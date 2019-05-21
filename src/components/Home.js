@@ -41,22 +41,8 @@ class Home extends React.Component {
       return this.setState({
         jobSearchResults: res,
         resPageCount: response.page_count
-      }, () => console.log(this.state))
+      })
     })
-    // .then(response => response.results.map((r) => {
-    //   return {name: r.name,
-    //   publication_date: new Intl.DateTimeFormat('en-US').format(new Date(r.publication_date)),
-    //   id: r.id,
-    //   locations: r.locations.map((l) => l.name).join(" / "),
-    //   levels: r.levels.map((l) => l.name).join( " / "),
-    //   company_name: r.company.name,
-    //   company_id: r.company.id,
-    //   categories: r.categories.map((m) => m.name).join( " / ")
-    // }
-    // }))
-    // .then(res => this.setState({
-    //   jobSearchResults: res
-    // }))
   }
 
   // add results pages to state?
@@ -66,19 +52,25 @@ class Home extends React.Component {
 
   formatsJobResultsObj = (response) => {
     return response.map((r) => {
-      // note: does NOT include contents: r.contents,
-      return {name: r.name,
-        landing_page: r.refs.landing_page,
-        publication_date: new Intl.DateTimeFormat('en-US').format(new Date(r.publication_date)),
-        muse_id: r.id,
-        locations: r.locations.map((l) => l.name).join(" / "),
-        levels: r.levels.map((l) => l.name).join( " / "),
-        company_name: r.company.name,
-        company_muse_id: r.company.id,
-        categories: r.categories.map((m) => m.name).join( " / ")
-    }})
+      if (!this.props.job_apps.theMuseAppHash[r.id]) {
+        return {
+          name: r.name,
+          landing_page: r.refs.landing_page,
+          publication_date: new Intl.DateTimeFormat('en-US').format(new Date(r.publication_date)),
+          muse_id: r.id,
+          locations: r.locations.map((l) => l.name).join(" / "),
+          levels: r.levels.map((l) => l.name).join( " / "),
+          company_name: r.company.name,
+          company_muse_id: r.company.id,
+          categories: r.categories.map((m) => m.name).join( " / ")
+        }
+      } else {
+        return
+      }
+    }).filter((i) => !!i) // note: does NOT include contents: r.contents,
   }
 
+"|Portland%2C+OR|Seattle%2C+WA|Austin%2C+TX"
 
   render() {
     if(!this.props.job_apps) {
@@ -89,7 +81,11 @@ class Home extends React.Component {
       return (
         <div>
           Home
-          <JobSearchList jobSearchResults = {this.state.jobSearchResults}/>
+          <div className="section-browse-jobs">
+            <h3 className="section-header browse-jobs-section-header">Browse Jobs</h3>
+            <JobSearchList jobSearchResults = {this.state.jobSearchResults} />
+          </div>
+
         </div>
       )
     }
