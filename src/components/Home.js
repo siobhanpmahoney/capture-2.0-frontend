@@ -22,7 +22,8 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchesJobSearchResults()
+    const params = this.convertsAttrToObj()
+    this.fetchesJobSearchResults(params, 1)
   }
 
 
@@ -32,15 +33,16 @@ class Home extends React.Component {
     return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
   }
 
-  fetchesJobSearchResults = () => {
-    const params = this.convertsAttrToObj()
-    searchJobRequest(params, 1)
+  fetchesJobSearchResults = (params, pageNumber) => {
+    searchJobRequest(params, pageNumber)
     .then(response => {
-      console.log(response.results.length)
       let res = this.formatsJobResultsObj(response.results)
+      let museLookUp = {}
+      res.forEach((r) => museLookUp[r.muse_id] = true )
       return this.setState({
-        jobSearchResults: res,
-        resPageCount: response.page_count
+        jobSearchResults: [...this.state.jobSearchResults,...res],
+        resPageCount: response.page_count,
+        museLookUp: Object.assign({}, this.state.museLookUp, museLookUp)
       })
     })
   }
@@ -70,20 +72,18 @@ class Home extends React.Component {
     }).filter((i) => !!i) // note: does NOT include contents: r.contents,
   }
 
-"|Portland%2C+OR|Seattle%2C+WA|Austin%2C+TX"
 
   render() {
     if(!this.props.job_apps) {
       return <div> Loading...</div>
     }
     else {
-      console.log(this.state)
       return (
         <div>
           Home
           <div className="section-browse-jobs">
             <h3 className="section-header browse-jobs-section-header">Browse Jobs</h3>
-            <JobSearchList jobSearchResults = {this.state.jobSearchResults} />
+            <JobSearchList jobSearchResults = {this.state.jobSearchResults} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
           </div>
 
         </div>

@@ -1,8 +1,8 @@
 .App {
-  text-align: center;
   font-family: "Open Sans";
   /* font-family: "Carlito";
   font-family: 'SarabunRegular';  */
+  margin: 12px;
 
 }
 
@@ -27,11 +27,7 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.job-search-results-item-wrapper {
+  padding: 12px;
+  margin: 12px;
 }
