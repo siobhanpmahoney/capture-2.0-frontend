@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Home from './components/Home'
 import Login from './components/Login'
+import JobSearchContainer from './components/searchJobs/JobSearchContainer'
 import JobResultDetail from './components/searchJobs/JobResultDetail'
 import './App.css';
 
@@ -14,7 +15,11 @@ class App extends Component {
               return <Home history={routerProps.history} />
             }} />
 
-          <Route path="/search/:museJobId" render={(routerProps) => {
+          <Route path="/jobs/search" render={(routerProps) => {
+                return <JobSearchContainer history={routerProps.history} />
+              }} />
+
+            <Route path="/jobs/search/:museJobId" render={(routerProps) => {
               return <JobResultDetail museJobId={routerProps.match.params.jobId} history={routerProps.history} />
             }} />
 
