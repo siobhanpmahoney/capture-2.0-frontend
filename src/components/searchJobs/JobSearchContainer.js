@@ -10,61 +10,86 @@ import {searchJobRequest} from '../../services/theMuseApi'
 
 import JobSearchList from './JobSearchList'
 
+
+
 // hold state —> search pref., etc.
+
+// to do
+// I. SEARCH FORM
+// I.1.  define fn — to capture selection and save in state (#JobSearchContainer)
+// I.2.  define fn — sort selection function (#JobSearchContainer)
+// I.3.  define fn — apply filter and sort selections (#Container)
+// I.4.  look into UI lib for form inputs? ((#JobSearchForm)
+// I.5.  paginate search results
+
+// II. BOOKMARK FEATURE
+// II.1.  Create fn — toggle save/unsave item
+// II.2.  Add bookmark icon
+// II.3   Style bookmark icon based on status
+
+
+// REFACTOR
+//  create util fn — parsing theMuse API response
+
 
 class JobSearchContainer extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      resultsPageCount: 0,
+      resultPageCount: 0,
       loadingState: true,
-      allJobResultsArr: [],
-      jobFilterDetailsObj: {}
+      jobResultArr: [],
+      selectedFilters: {
+        categories: "",
+        locations: "",
+        industries: ""
+      }
     }
   }
 
   componentDidMount() {
-    this.getJobSearchResult()
+    console.log("user props", this.props.user)
+    this.setState({
+      loadingState:true
+    }, this.getResultPageCount)
   }
 
-  getJobSearchResult = () => {
+  // formListener = (event) => {
+  //   let name = event.target.name
+  //   let val = event.target.value
+  //   let filters = Object.assign({}, this.state.selectedFilters)
+  //   filters[name] = [...this.state.selectedFilters[name], value]
+  //   this.setState({
+  //     selectedFilters: filters
+  //   })
+  // }
+
+
+  getResultPageCount = () => {
     const userPref = this.convertsAttrToObj()
     searchJobRequest(userPref, 1)
     .then(response => {
-      console.log("step 1: get results page count")
-      console.log("response — ", response)
-      console.log(response.page_count)
       return response.page_count
     })
     .then(count => {
       this.setState({
-        resultsPageCount: count
-      }, () => this.addToStateHelper(userPref))
+        resultPageCount: count
+      }, () => this.addJobResultsToState(userPref))
     })
   }
 
-  addToStateHelper = (userPref) => {
+  addJobResultsToState = (userPref) => {
     let i = 1
-    console.log("step 2: make API call for each page of results")
-    console.log("page count: ", this.state.resultsPageCount)
     // capture response from API call in TEMP_VARS:
-
-
-    while (i < this.state.resultsPageCount+1) {
+    while (i < this.state.resultPageCount+1) {
       let addingToJobListState = []
-      let addingToDetailState = {}
       searchJobRequest(userPref, i)
-
       // jobs = response from API request to page i
       .then(jobs => {
-        console.log(`step 2.2: getting results from page ${i}`)
-        console.log("jobs: ", jobs)
         for (let j of jobs.results) {
           // saving to TEMP_VARS
-
           addingToJobListState.push({
-
               name: j.name,
               landing_page: j.refs.landing_page,
               publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
@@ -74,67 +99,34 @@ class JobSearchContainer extends React.Component {
               company_name: j.company.name,
               company_muse_id: j.company.id,
               categories: j.categories.map((m) => m.name).join( " / ")
-            
           })
-
-          addingToDetailState[j.id] = {
-            savedStatus: !!this.props.job_apps.theMuseAppHash[j.id],
-            datePosted: Date.parse(j.publication_date)
-          }
-
         }
         return i
       })
       .then(res => {
-        let listStateCopy = this.state.allJobResultsArr.slice(0)
-        let filterCopy = Object.assign({}, this.state.jobFilterDetailsObj)
-        console.log(addingToJobListState)
-        console.log(addingToDetailState)
+        let listStateCopy = this.state.jobResultArr.slice(0)
 
         this.setState({
-          allJobResultsArr: [...listStateCopy,...addingToJobListState],
-          jobFilterDetailsObj: Object.assign({}, filterCopy, addingToDetailState)
-        }, () => console.log("Step 5000: HERE updated state"))
-        addingToJobListState = []
-        addingToDetailState = {}
-      })
-
-
-        i++
-
-
-    }
-
-      // if (i > this.state.resultsPageCount) {
-        this.setState({
-          loadingState: false
+          jobResultArr: [...listStateCopy,...addingToJobListState]
         })
-      // }
-
-
-
-
-
-
-
-
-    // TO DO: add TEMP_VARS to state and return state
-    // this.setState({
-    //
-    // })
+        addingToJobListState = []
+      })
+      i++
+    }
+    this.setState({
+      loadingState: false
+    })
   }
 
 
 
 
   // helper fn
-
-
   convertsAttrToObj = () => {
     const {pref_locations, pref_categories, pref_levels} = this.props.user
+    console.log("pref_locations:", pref_locations, "pref_categories:", pref_categories, "pref_levels:", pref_levels)
     return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
   }
-
 
 
   render() {
@@ -143,11 +135,9 @@ class JobSearchContainer extends React.Component {
         <div>loading</div>
       )
     } else {
-      let jobs = this.state.allJobResultsArr
-
       return (
         <div className="job-search-container">
-          <JobSearchList jobSearchResults = {jobs} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
+          <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
         </div>
       )
     }
