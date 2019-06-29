@@ -2,12 +2,11 @@ import React from 'react'
 import {withRouter, Link} from 'react-router-dom'
 
 const JobSearchListItem = (props) => {
-  debugger
   return (
     <div className="job-search-results-item-wrapper">
       <div className="job-card-main">
         <div className="job-list-item-company">
-          {props.job.company.name}
+          {props.job.company_name}
         </div>
 
         <div className="job-list-item-title">
@@ -15,7 +14,7 @@ const JobSearchListItem = (props) => {
         </div>
 
         <div className="job-list-item-location">
-           {props.job.locations.map((loc) => loc.name).join(",")}
+          {props.job.locations}
         </div>
 
       </div>

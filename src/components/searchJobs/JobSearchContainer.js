@@ -61,21 +61,26 @@ class JobSearchContainer extends React.Component {
         console.log(`step 2.2: getting results from page ${i}`)
         console.log("jobs: ", jobs)
         for (let j of jobs.results) {
-          console.log("step 3: adding each job to list to render")
-          console.log("job getting added: ", j)
           // saving to TEMP_VARS
-          addingToJobListState.push(j)
-          console.log("step 3.1: adding job to display state")
-          console.log(`display state after ${j.name} (id: ${j.id}) gets added`)
 
-          console.log(`step 3.2: adding filtering criteria for ${j.name} (id: ${j.id}) to displayState`)
+          addingToJobListState.push({
+
+              name: j.name,
+              landing_page: j.refs.landing_page,
+              publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
+              muse_id: j.id,
+              locations: j.locations.map((l) => l.name).join(" / "),
+              levels: j.levels.map((l) => l.name).join( " / "),
+              company_name: j.company.name,
+              company_muse_id: j.company.id,
+              categories: j.categories.map((m) => m.name).join( " / ")
+            
+          })
+
           addingToDetailState[j.id] = {
             savedStatus: !!this.props.job_apps.theMuseAppHash[j.id],
             datePosted: Date.parse(j.publication_date)
           }
-
-          console.log(`${j.name} (id: ${j.id}) as saved in filter state: `, addingToDetailState[j.id])
-          console.log(`entire filter state after adding ${j.name} (id: ${j.id}): `)
 
         }
         return i
@@ -139,7 +144,7 @@ class JobSearchContainer extends React.Component {
       )
     } else {
       let jobs = this.state.allJobResultsArr
-      
+
       return (
         <div className="job-search-container">
           <JobSearchList jobSearchResults = {jobs} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
