@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import Home from './components/Home'
 import Login from './components/Login'
+import Home from './components/Home'
+import NavBar from './components/nav/NavBar'
 import JobSearchContainer from './components/searchJobs/JobSearchContainer'
 import JobResultDetail from './components/searchJobs/JobResultDetail'
 import './App.css';
@@ -10,6 +11,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <NavBar />
         <Switch>
           <Route exact path='/' render={(routerProps) => {
               return <Home history={routerProps.history} />

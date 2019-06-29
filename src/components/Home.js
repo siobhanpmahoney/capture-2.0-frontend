@@ -80,7 +80,6 @@ class Home extends React.Component {
     else {
       return (
         <div>
-          Home
           <div className="section-browse-jobs">
             <h3 className="section-header browse-jobs-section-header">Browse Jobs</h3>
             <JobSearchList jobSearchResults = {this.state.jobSearchResults} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />

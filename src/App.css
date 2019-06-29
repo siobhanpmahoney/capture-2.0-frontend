@@ -1,5 +1,6 @@
 .App {
-  font-family: "Open Sans";
+  font-family: "SF Pro Text";
+  letter-spacing: 0.3px;
   /* font-family: "Carlito";
   font-family: 'SarabunRegular';  */
   margin: 12px;
@@ -25,6 +26,17 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.navbar-container {
+  width: 100%;
+  padding: 4px 0px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-item {
+  padding: 2px 4px;
 }
 
 .job-search-results-item-wrapper {
