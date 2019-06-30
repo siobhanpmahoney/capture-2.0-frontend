@@ -23,14 +23,21 @@ const _helperConvertAttrStrForQuery = (queryKey, attributeString) => {
 
 // convert user pref attributes into arrays with readable strings for UI
 export const convertAttrStrForDisplay = (attributeObj) => {
+  console.log(attributeObj)
   let transformedObj = {}
   Object.keys(attributeObj).map((k) => {
-    transformedObj[k] = _helperConvertAttrStrForDisplay(attributeObj[k])
+    console.log("attribute obj", attributeObj)
+    if (!attributeObj[k]) {
+        transformedObj[k] = []
+    } else {
+      transformedObj[k] = _helperConvertAttrStrForDisplay(attributeObj[k])
+    }
   })
   return transformedObj
 }
 
 const _helperConvertAttrStrForDisplay = (str) => {
+  console.log('str: ', str)
   return str
   .replace(/["+"]+/g," ")
   .replace(/\%26+/g, "&")

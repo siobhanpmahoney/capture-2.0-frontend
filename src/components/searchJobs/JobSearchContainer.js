@@ -8,6 +8,8 @@ import {fetchJobAppsAction} from '../../actions'
 import {convertAttrStrForDisplay} from '../../utils/pref_regex'
 import {searchJobRequest} from '../../services/theMuseApi'
 
+
+import JobSearchForm from './JobSearchForm'
 import JobSearchList from './JobSearchList'
 
 
@@ -41,18 +43,34 @@ class JobSearchContainer extends React.Component {
       loadingState: true,
       jobResultArr: [],
       selectedFilters: {
-        categories: "",
-        locations: "",
-        industries: ""
+        categories: [],
+        locations: [],
+        industries: [],
+        levels: ["something to test"]
       }
     }
   }
 
   componentDidMount() {
-    console.log("user props", this.props.user)
+
+    const defaultPreferences = convertAttrStrForDisplay(this.userPreferenceParser())
+
     this.setState({
-      loadingState:true
+      loadingState:true,
+      selectedFilters: Object.assign({}, defaultPreferences)
     }, this.getResultPageCount)
+  }
+
+  userPreferenceParser = () => {
+    if (!!this.props.user) {
+      let parsed = {
+          categories: this.props.user.pref_categories,
+          levels: this.props.user.pref_levels,
+          locations: this.props.user.pref_locations,
+          industries: this.props.user.pref_industries
+      }
+      return parsed
+    }
   }
 
   // formListener = (event) => {
@@ -124,7 +142,6 @@ class JobSearchContainer extends React.Component {
   // helper fn
   convertsAttrToObj = () => {
     const {pref_locations, pref_categories, pref_levels} = this.props.user
-    console.log("pref_locations:", pref_locations, "pref_categories:", pref_categories, "pref_levels:", pref_levels)
     return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
   }
 
@@ -137,6 +154,7 @@ class JobSearchContainer extends React.Component {
     } else {
       return (
         <div className="job-search-container">
+          <JobSearchForm />
           <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
         </div>
       )
@@ -145,6 +163,7 @@ class JobSearchContainer extends React.Component {
 }
 
 function mapStateToProps(state, props) {
+
   return {
     user: state.user,
     job_apps: state.job_apps,
