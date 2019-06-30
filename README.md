@@ -49,5 +49,6 @@ location=Brooklyn%2C+NY&location=New+York%2C+NY&location=San+Francisco%2C+CA \
 
 
 1. Retrieve preferences from database
-2. __Saving to frontend state__: Convert to UI format => save Array to frontend state
-3. __Update Display    
+2. __Saving to frontend state__: Convert to UI format using `#convertAttrStrForDisplay` fn => save Array to frontend state
+3. __Update Display__: push additional selection to frontend state
+4. __Query theMuse API__: convert frontend state to query params using `#convertDisplayToQueryParam` fn
