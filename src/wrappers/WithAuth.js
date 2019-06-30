@@ -16,7 +16,6 @@ export default function (WrappedComponent) {
 
     componentDidMount() {
        if (ls.get('jwt_token') && !this.props.user.id) {
-         console.log("in if statement")
         this.props.fetchCurrentUserAction(ls.get('jwt_token'))
         .then(user_id => this.props.fetchJobAppsAction(user_id))
        }

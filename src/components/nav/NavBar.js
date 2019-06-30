@@ -13,7 +13,6 @@ const NavBar = () => {
 ) : (
   [{title: "Login", path: "/login"}]
 )
-console.log(ls.get("jwt_token"))
   return (
 
     <div className="navbar-container">

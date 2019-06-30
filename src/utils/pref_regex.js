@@ -15,7 +15,6 @@ export const convertAttrStrForQuery = (attributeObj) => {
 
 const _helperConvertAttrStrForQuery = (queryKey, attributeString) => {
     let string = `${queryKey}=${attributeString}`
-    console.log(string)
     return string.split("|").join(`&${queryKey}=`)
 }
 
@@ -23,10 +22,8 @@ const _helperConvertAttrStrForQuery = (queryKey, attributeString) => {
 
 // convert user pref attributes into arrays with readable strings for UI
 export const convertAttrStrForDisplay = (attributeObj) => {
-  console.log(attributeObj)
   let transformedObj = {}
   Object.keys(attributeObj).map((k) => {
-    console.log("attribute obj", attributeObj)
     if (!attributeObj[k]) {
         transformedObj[k] = []
     } else {
@@ -37,7 +34,6 @@ export const convertAttrStrForDisplay = (attributeObj) => {
 }
 
 const _helperConvertAttrStrForDisplay = (str) => {
-  console.log('str: ', str)
   return str
   .replace(/["+"]+/g," ")
   .replace(/\%26+/g, "&")

@@ -4,7 +4,6 @@ import JobSearchListItem from './JobSearchListItem'
 
 
 const JobSearchList = (props) => {
-  console.log(props.jobSearchResults[0])
   return (
     <div className="job-search-list">
       {props.jobSearchResults.map((j) => {

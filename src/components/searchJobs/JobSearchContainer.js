@@ -73,24 +73,34 @@ class JobSearchContainer extends React.Component {
     }
   }
 
-  formListener = (event) => {
-    let name = event.target.name
-    let val = event.target.value
-    let filters = Object.assign({}, this.state.selectedFilters)
-    let updatedCriteria
+  formListener = (event, criteria) => {
+    console.log(event)
+    debugger
+    let name = criteria
+    let vals = event.map((e) => e.value)
 
-    if (filters[name].includes(val)) {
-      updatedCriteria = [...filters[name].slice(0, filters[name].indexOf(val)),...filters[name].slice(filters[name].indexOf(val) + 1)]
-    } else {
-      updatedCriteria = filters[name].push(val)
-    }
+    let filterState = Object.assign({}, this.state.selectedFilters)
 
-    filters[name] = updatedCriteria
-
+    filterState[criteria] = vals
 
     this.setState({
-      selectedFilters: filters
+      selectedFilters: filterState
     })
+    // let filters = Object.assign({}, this.state.selectedFilters)
+    // let updatedCriteria
+    //
+    // if (filters[name].includes(val)) {
+    //   updatedCriteria = [...filters[name].slice(0, filters[name].indexOf(val)),...filters[name].slice(filters[name].indexOf(val) + 1)]
+    // } else {
+    //   updatedCriteria = filters[name].push(val)
+    // }
+    //
+    // filters[name] = updatedCriteria
+    //
+    //
+    // this.setState({
+    //   selectedFilters: filters
+    // })
   }
 
 
@@ -164,7 +174,7 @@ class JobSearchContainer extends React.Component {
     } else {
       return (
         <div className="job-search-container">
-          <JobSearchForm selectedFilters={this.state.selectedFilters} />
+          <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
           <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
         </div>
       )

@@ -34,6 +34,7 @@ const JobSearchForm = (props) => {
           options={options[criteria]}
           className="basic-multi-select"
           classNamePrefix="select"
+          onChange={e => props.formListener(e, criteria)}
           />
       )
     })}

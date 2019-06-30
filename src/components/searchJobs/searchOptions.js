@@ -3,15 +3,18 @@ export const searchOptions = () => {
     levels: [
       {
         label: 'Internship',
-        value: 'Internship'
+        value: 'Internship',
+        name: 'levels'
       },
       {
         label: 'Entry Level',
-        value: 'Entry Level'
+        value: 'Entry Level',
+        name: 'levels'
       },
       {
         label: 'Mid Level',
-        value: 'Mid Level'
+        value: 'Mid Level',
+        name: 'levels'
       },
       {
         label: 'Senior Level',
