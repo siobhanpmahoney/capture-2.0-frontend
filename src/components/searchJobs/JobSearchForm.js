@@ -2,7 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 import {searchOptions} from './searchOptions'
 
-const JobSearchForm = () => {
+const JobSearchForm = (props) => {
 
   // define select options
   // const option_values = {
@@ -19,8 +19,15 @@ const JobSearchForm = () => {
       <h3>form container</h3>
 
     {Object.keys(options).map((criteria) => {
+      let defaults = props.selectedFilters[criteria].map((op) => {
+        let obj = {}
+        obj["value"] = op
+        obj["label"] = op
+        return obj
+      })
       return (
         <Select
+          defaultValue={defaults}
           isMulti
           isSearchable
           name={criteria}

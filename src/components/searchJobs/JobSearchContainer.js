@@ -46,7 +46,7 @@ class JobSearchContainer extends React.Component {
         categories: [],
         locations: [],
         // industries: [],
-        levels: ["something to test"]
+        levels: []
       }
     }
   }
@@ -73,15 +73,25 @@ class JobSearchContainer extends React.Component {
     }
   }
 
-  // formListener = (event) => {
-  //   let name = event.target.name
-  //   let val = event.target.value
-  //   let filters = Object.assign({}, this.state.selectedFilters)
-  //   filters[name] = [...this.state.selectedFilters[name], value]
-  //   this.setState({
-  //     selectedFilters: filters
-  //   })
-  // }
+  formListener = (event) => {
+    let name = event.target.name
+    let val = event.target.value
+    let filters = Object.assign({}, this.state.selectedFilters)
+    let updatedCriteria
+
+    if (filters[name].includes(val)) {
+      updatedCriteria = [...filters[name].slice(0, filters[name].indexOf(val)),...filters[name].slice(filters[name].indexOf(val) + 1)]
+    } else {
+      updatedCriteria = filters[name].push(val)
+    }
+
+    filters[name] = updatedCriteria
+
+
+    this.setState({
+      selectedFilters: filters
+    })
+  }
 
 
   getResultPageCount = () => {
@@ -154,7 +164,7 @@ class JobSearchContainer extends React.Component {
     } else {
       return (
         <div className="job-search-container">
-          <JobSearchForm />
+          <JobSearchForm selectedFilters={this.state.selectedFilters} />
           <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
         </div>
       )
