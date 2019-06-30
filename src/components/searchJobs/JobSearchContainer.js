@@ -45,7 +45,7 @@ class JobSearchContainer extends React.Component {
       selectedFilters: {
         categories: [],
         locations: [],
-        industries: [],
+        // industries: [],
         levels: ["something to test"]
       }
     }
@@ -67,7 +67,7 @@ class JobSearchContainer extends React.Component {
           categories: this.props.user.pref_categories,
           levels: this.props.user.pref_levels,
           locations: this.props.user.pref_locations,
-          industries: this.props.user.pref_industries
+          // industries: this.props.user.pref_industries
       }
       return parsed
     }
