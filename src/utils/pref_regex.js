@@ -34,6 +34,7 @@ export const convertAttrStrForDisplay = (attributeObj) => {
 }
 
 const _helperConvertAttrStrForDisplay = (str) => {
+  console.log(str)
   return str
   .replace(/["+"]+/g," ")
   .replace(/\%26+/g, "&")

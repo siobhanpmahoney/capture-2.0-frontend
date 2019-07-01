@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import WithAuth from '../../wrappers/WithAuth'
 import {fetchJobAppsAction} from '../../actions'
-import {convertAttrStrForDisplay} from '../../utils/pref_regex'
+import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/pref_regex'
 import {searchJobRequest} from '../../services/theMuseApi'
 
 
@@ -18,10 +18,9 @@ import JobSearchList from './JobSearchList'
 
 // to do
 // I. SEARCH FORM
-// I.1.  define fn — to capture selection and save in state (#JobSearchContainer)
+
 // I.2.  define fn — sort selection function (#JobSearchContainer)
 // I.3.  define fn — apply filter and sort selections (#Container)
-// I.4.  look into UI lib for form inputs? ((#JobSearchForm)
 // I.5.  paginate search results
 
 // II. BOOKMARK FEATURE
@@ -42,75 +41,62 @@ class JobSearchContainer extends React.Component {
       resultPageCount: 0,
       loadingState: true,
       jobResultArr: [],
+      museIds: {},
       selectedFilters: {
-        categories: [],
-        locations: [],
+        category: null,
+        location: null,
         // industries: [],
-        levels: []
+        level: null
       }
     }
   }
 
   componentDidMount() {
-
-    const defaultPreferences = convertAttrStrForDisplay(this.userPreferenceParser())
-
-    this.setState({
-      loadingState:true,
-      selectedFilters: Object.assign({}, defaultPreferences)
-    }, this.getResultPageCount)
-  }
-
-  userPreferenceParser = () => {
     if (!!this.props.user) {
-      let parsed = {
-          categories: this.props.user.pref_categories,
-          levels: this.props.user.pref_levels,
-          locations: this.props.user.pref_locations,
-          // industries: this.props.user.pref_industries
-      }
-      return parsed
+      // const parsedPref = this.userPreferenceParser()
+      // const defaultPreferences = convertAttrStrForDisplay(parsedPref)
+      const defaultPreferences = this.userPreferenceParser()
+      const filterState =  Object.assign({}, defaultPreferences)
+      this.setState({
+        loadingState:true,
+        selectedFilters: filterState
+      }, this.getResultPageCount)
     }
   }
 
-  formListener = (event, criteria) => {
-    console.log(event)
-    debugger
-    let name = criteria
-    let vals = event.map((e) => e.value)
+  userPreferenceParser = () => {
 
-    let filterState = Object.assign({}, this.state.selectedFilters)
+    let parsed = {
+      category: this.props.user.pref_categories,
+      level: this.props.user.pref_levels,
+      location: this.props.user.pref_locations,
+      // industries: this.props.user.pref_industries
+    }
+    console.log(parsed)
+    return convertAttrStrForDisplay(parsed)
 
-    filterState[criteria] = vals
-
-    this.setState({
-      selectedFilters: filterState
-    })
-    // let filters = Object.assign({}, this.state.selectedFilters)
-    // let updatedCriteria
-    //
-    // if (filters[name].includes(val)) {
-    //   updatedCriteria = [...filters[name].slice(0, filters[name].indexOf(val)),...filters[name].slice(filters[name].indexOf(val) + 1)]
-    // } else {
-    //   updatedCriteria = filters[name].push(val)
-    // }
-    //
-    // filters[name] = updatedCriteria
-    //
-    //
-    // this.setState({
-    //   selectedFilters: filters
-    // })
   }
 
+  // convertsAttrToObj = () => {
+  //   const preferences = Object.assign({}, this.state.selectedFilters)
+  //   console.log("preferences", preferences)
+  //   return convertAttrStrForDisplay(preferences)
+  // }
+
+  // convertsAttrToObj = () => {
+  //   const {pref_locations, pref_categories, pref_levels} = this.props.user
+  //   return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
+  // }
 
   getResultPageCount = () => {
-    const userPref = this.convertsAttrToObj()
+    const userPref = Object.assign({}, this.state.selectedFilters)
+    console.log("userPref", userPref)
     searchJobRequest(userPref, 1)
     .then(response => {
       return response.page_count
     })
     .then(count => {
+      console.log(count)
       this.setState({
         resultPageCount: count
       }, () => this.addJobResultsToState(userPref))
@@ -120,14 +106,21 @@ class JobSearchContainer extends React.Component {
   addJobResultsToState = (userPref) => {
     let i = 1
     // capture response from API call in TEMP_VARS:
-    while (i < this.state.resultPageCount+1) {
+    let count = this.state.resultPageCount
+
+    let ceiling = count > 20 ? 20 : (count + 1)
+    console.log("ceiling", ceiling)
+    while (i < ceiling) {
       let addingToJobListState = []
+      let museIdCheck = {}
+
       searchJobRequest(userPref, i)
       // jobs = response from API request to page i
       .then(jobs => {
         for (let j of jobs.results) {
-          // saving to TEMP_VARS
-          addingToJobListState.push({
+          if (!museIdCheck[j.id]) {
+            museIdCheck[j.id] = j.id
+            addingToJobListState.push({
               name: j.name,
               landing_page: j.refs.landing_page,
               publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
@@ -137,17 +130,21 @@ class JobSearchContainer extends React.Component {
               company_name: j.company.name,
               company_muse_id: j.company.id,
               categories: j.categories.map((m) => m.name).join( " / ")
-          })
+            })
+          }
+
         }
         return i
       })
       .then(res => {
         let listStateCopy = this.state.jobResultArr.slice(0)
-
+        let museIdsCopy = Object.assign({}, this.state.museIds)
         this.setState({
-          jobResultArr: [...listStateCopy,...addingToJobListState]
+          jobResultArr: [...listStateCopy,...addingToJobListState],
+          museIds: Object.assign({}, museIdsCopy, museIdCheck)
         })
         addingToJobListState = []
+        museIdCheck = {}
       })
       i++
     }
@@ -156,14 +153,23 @@ class JobSearchContainer extends React.Component {
     })
   }
 
+  formListener = (event, criteria) => {
+    let name = criteria
+    let vals = event.map((e) => e.value)
+    let filterState = Object.assign({}, this.state.selectedFilters)
+
+    filterState[criteria] = vals
+
+    this.setState({
+      selectedFilters: filterState
+    }, this.getResultPageCount)
+  }
+
 
 
 
   // helper fn
-  convertsAttrToObj = () => {
-    const {pref_locations, pref_categories, pref_levels} = this.props.user
-    return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
-  }
+
 
 
   render() {
@@ -172,7 +178,9 @@ class JobSearchContainer extends React.Component {
         <div>loading</div>
       )
     } else {
+          console.log(this.state.selectedFilters)
       return (
+
         <div className="job-search-container">
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
           <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />

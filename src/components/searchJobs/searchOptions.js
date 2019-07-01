@@ -1,6 +1,6 @@
 export const searchOptions = () => {
   return {
-    levels: [
+    level: [
       {
         label: 'Internship',
         value: 'Internship',
@@ -21,7 +21,7 @@ export const searchOptions = () => {
         value: 'Senior Level'
       }
     ],
-    categories: [
+    category: [
       {
         label: 'Account Management',
         value: 'Account Management'
@@ -103,7 +103,7 @@ export const searchOptions = () => {
         value: 'Social Media & Community'
       }
     ],
-    locations: [
+    location: [
       {
         label: 'Phoenix, AZ',
         value: 'Phoenix, AZ'
