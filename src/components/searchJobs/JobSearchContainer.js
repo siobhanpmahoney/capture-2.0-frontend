@@ -131,7 +131,7 @@ class JobSearchContainer extends React.Component {
           .then(response => {
             museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
             let data = job_data.slice(0)
-            job_data = [...data,...response.jobResultArr]
+            return job_data = [...data,...response.jobResultArr]
           })
           i++
         }
