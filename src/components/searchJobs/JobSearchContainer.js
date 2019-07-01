@@ -60,7 +60,7 @@ class JobSearchContainer extends React.Component {
       this.setState({
         loadingState:true,
         selectedFilters: filterState
-      }, this.getResultPageCount)
+      }, this.updateJobSearchState)
     }
   }
 
@@ -88,70 +88,180 @@ class JobSearchContainer extends React.Component {
   //   return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
   // }
 
-  getResultPageCount = () => {
+  // initial run: make request => add first page results to state, get result page count
+  // repeat steps for additional pages
+
+  // misc details:
+  //  1. clear current state
+  //  2. repeat steps if page count > 1
+
+  // fn:  1. make API requset,
+  //      2. concat results into array with relevant info using helper_fn_1,
+  //      3. add to State
+
+  // helper_fn1: accepts array and jobObj =>  extract relevant data for each result && returns updated array
+
+  updateJobSearchState = () => {
     const userPref = Object.assign({}, this.state.selectedFilters)
-    console.log("userPref", userPref)
-    searchJobRequest(userPref, 1)
-    .then(response => {
-      return response.page_count
-    })
-    .then(count => {
-      console.log(count)
-      this.setState({
-        resultPageCount: count
-      }, () => this.addJobResultsToState(userPref))
-    })
-  }
 
-  addJobResultsToState = (userPref) => {
-    let i = 1
-    // capture response from API call in TEMP_VARS:
-    let count = this.state.resultPageCount
-
-    let ceiling = count > 20 ? 20 : (count + 1)
-    console.log("ceiling", ceiling)
-    while (i < ceiling) {
-      let addingToJobListState = []
-      let museIdCheck = {}
-
-      searchJobRequest(userPref, i)
-      // jobs = response from API request to page i
-      .then(jobs => {
-        for (let j of jobs.results) {
-          if (!museIdCheck[j.id]) {
-            museIdCheck[j.id] = j.id
-            addingToJobListState.push({
-              name: j.name,
-              landing_page: j.refs.landing_page,
-              publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
-              muse_id: j.id,
-              locations: j.locations.map((l) => l.name).join(" / "),
-              levels: j.levels.map((l) => l.name).join( " / "),
-              company_name: j.company.name,
-              company_muse_id: j.company.id,
-              categories: j.categories.map((m) => m.name).join( " / ")
-            })
-          }
-
-        }
-        return i
-      })
-      .then(res => {
-        let listStateCopy = this.state.jobResultArr.slice(0)
-        let museIdsCopy = Object.assign({}, this.state.museIds)
-        this.setState({
-          jobResultArr: [...listStateCopy,...addingToJobListState],
-          museIds: Object.assign({}, museIdsCopy, museIdCheck)
-        })
-        addingToJobListState = []
-        museIdCheck = {}
-      })
-      i++
-    }
     this.setState({
-      loadingState: false
+      jobResultArr: [], // to do
+      museIds: {}, // to do
+    })
+
+    let museIdsToCheck = {}
+    let job_data = []
+    this.queryTheMuseJobsAPI(userPref, 1, museIdsToCheck)
+    .then(response => {
+      museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
+      let data = job_data.slice(0)
+      console.log(response.jobResultsArr)
+      job_data = [...data,...response.jobResultArr]
+
+      if(response.pageCount < 2) {
+         this.setState({
+          jobResultArr: job_data,
+          museIds: museIdsToCheck,
+          loadingState: false,
+        })
+      } else {
+        let i = 2
+        while (i<=response.pageCount) {
+          this.queryTheMuseJobsAPI(userPref, i, museIdsToCheck)
+          .then(response => {
+            museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
+            let data = job_data.slice(0)
+            job_data = [...data,...response.jobResultArr]
+          })
+          i++
+        }
+         this.setState({
+          jobResultArr: job_data,
+          museIds: museIdsToCheck,
+          loadingState: false
+        })
+      }
     })
   }
+
+  queryTheMuseJobsAPI = (userPref, pageCount, museIdsToCheck) => {
+    // const userPref = Object.assign({}, this.state.selectedFilters)
+    //
+    // this.setState({
+    //   jobResultArr: [], // to do
+    //   museIds: {}, // to do
+    // })
+
+    // const loadingState = response.results === pageNo
+    console.log(pageCount)
+    return searchJobRequest(userPref, pageCount)
+    .then(response => {
+      console.log(response)
+      const res = this.createJobArrForState(response.results)
+      return ({
+        pageCount: response.page_count,
+        jobResultArr: res.jobsForState, // to do
+        museIds: res.idsForState, // to do
+      })
+    })
+  }
+
+  createJobArrForState = (searchResults, museIdsToCheck) => {
+    console.log(searchResults)
+    let museIds2 = Object.assign({}, museIdsToCheck)
+    let job_data = []
+    console.log(searchResults[0])
+    for (let j of searchResults) {
+
+      if (!museIds2[j.id] && !this.state.museIds[j.id]) {
+        museIds2[j.id] = true
+        let data = job_data.slice(0)
+        job_data = [...data, this.extractJobData(j)]
+      }
+    }
+    return Object.assign({}, {jobsForState: job_data, idsForState: museIds2})
+  }
+
+  extractJobData = (j) => {
+    return {
+      name: j.name,
+      landing_page: j.refs.landing_page,
+      publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
+      muse_id: j.id,
+      locations: j.locations.map((l) => l.name).join(" / "),
+      levels: j.levels.map((l) => l.name).join( " / "),
+      company_name: j.company.name,
+      company_muse_id: j.company.id,
+      categories: j.categories.map((m) => m.name).join( " / ")
+    }
+  }
+
+  // getResultPageCount = () => {
+  //   const userPref = Object.assign({}, this.state.selectedFilters)
+  //   searchJobRequest(userPref, 1)
+  //   .then(response => {
+  //     return response.page_count,
+  //
+  //   })
+  //   .then(count => {
+  //     console.log(count)
+  //     this.setState({
+  //       resultPageCount: count,
+  //       jobResultArr: [],
+  //       museIds: {},
+  //     }, () => this.addJobResultsToState(userPref))
+  //   })
+  // }
+  //
+  // addJobResultsToState = (userPref) => {
+  //   let i = 1
+  //   // capture response from API call in TEMP_VARS:
+  //   let count = this.state.resultPageCount
+  //
+  //   let ceiling = count > 20 ? 20 : (count + 1)
+  //   console.log("ceiling", ceiling)
+  //   while (i < ceiling) {
+  //     let addingToJobListState = []
+  //     let museIdCheck = {}
+  //
+  //     searchJobRequest(userPref, i)
+  //     // jobs = response from API request to page i
+  //     .then(jobs => {
+  //       for (let j of jobs.results) {
+  //         if (!museIdCheck[j.id] && !this.state.museIds[j.id]) {
+  //           museIdCheck[j.id] = j.id
+  //           addingToJobListState.push({
+  //             name: j.name,
+  //             landing_page: j.refs.landing_page,
+  //             publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
+  //             muse_id: j.id,
+  //             locations: j.locations.map((l) => l.name).join(" / "),
+  //             levels: j.levels.map((l) => l.name).join( " / "),
+  //             company_name: j.company.name,
+  //             company_muse_id: j.company.id,
+  //             categories: j.categories.map((m) => m.name).join( " / ")
+  //           })
+  //         }
+  //
+  //       }
+  //       return i
+  //     })
+  //     .then(res => {
+  //       let listStateCopy = this.state.jobResultArr.slice(0)
+  //       let museIdsCopy = Object.assign({}, this.state.museIds)
+  //       this.setState({
+  //         jobResultArr: [...listStateCopy,...addingToJobListState],
+  //         museIds: Object.assign({}, museIdsCopy, museIdCheck)
+  //       })
+  //       addingToJobListState = []
+  //       museIdCheck = {}
+  //     })
+  //     i++
+  //   }
+  //   this.setState({
+  //     loadingState: false
+  //   })
+  // }
 
   formListener = (event, criteria) => {
     let name = criteria
@@ -162,7 +272,7 @@ class JobSearchContainer extends React.Component {
 
     this.setState({
       selectedFilters: filterState
-    }, this.getResultPageCount)
+    }, this.updateJobSearchState)
   }
 
 
@@ -182,6 +292,7 @@ class JobSearchContainer extends React.Component {
       return (
 
         <div className="job-search-container">
+          <h1>Result Count: {this.state.jobResultArr.length}</h1>
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
           <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
         </div>
