@@ -56,7 +56,9 @@ class JobSearchContainer extends React.Component {
       // const parsedPref = this.userPreferenceParser()
       // const defaultPreferences = convertAttrStrForDisplay(parsedPref)
       const defaultPreferences = this.userPreferenceParser()
+      console.log("step 3 BEGIN: get parsed user pref obj and parse into readable English — defaultPreference value for handoff: ", defaultPreferences)
       const filterState =  Object.assign({}, defaultPreferences)
+      console.log("step 3 END: parsed user pref to parse into english to save in filter state: ", filterState)
       this.setState({
         loadingState:true,
         selectedFilters: filterState
@@ -65,14 +67,14 @@ class JobSearchContainer extends React.Component {
   }
 
   userPreferenceParser = () => {
-
+    console.log("step 2 BEGIN: parsed user preferences from user saved preferences => obj parsed by preference criteria")
     let parsed = {
       category: this.props.user.pref_categories,
       level: this.props.user.pref_levels,
       location: this.props.user.pref_locations,
       // industries: this.props.user.pref_industries
     }
-    console.log(parsed)
+    console.log("step 2 END: criteria-parsed obj: ", parsed)
     return convertAttrStrForDisplay(parsed)
 
   }
@@ -102,87 +104,81 @@ class JobSearchContainer extends React.Component {
   // helper_fn1: accepts array and jobObj =>  extract relevant data for each result && returns updated array
 
   updateJobSearchState = () => {
-    const userPref = Object.assign({}, this.state.selectedFilters)
-
-    this.setState({
-      jobResultArr: [], // to do
-      museIds: {}, // to do
-    })
+    console.log("STEP 4 BEGIN: taking user preferences saved in state and running query with theMuse API")
+    console.log("STEP 4.1 — filter state: ", this.state.selectedFilters)
+    const pref = Object.assign({}, this.state.selectedFilters)
 
     let museIdsToCheck = {}
     let job_data = []
-    this.queryTheMuseJobsAPI(userPref, 1, museIdsToCheck)
-    .then(response => {
-      museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
-      let data = job_data.slice(0)
-      console.log(response.jobResultsArr)
-      job_data = [...data,...response.jobResultArr]
+     this.queryTheMuseJobsAPI(pref, 1, museIdsToCheck)
+    .then(response => this.setState({
+      jobResultArr: response.jobResultArr,
+      museIds: response.museIds,
+      loadingState: false,
+    }, () => console.log("STEP 4 END: updated state with query results", response)))
+      // if(response.pageCount < 2) {
+        //  this.setState({
+        //   jobResultArr: job_data,
+        //   museIds: museIdsToCheck,
+        //   loadingState: false,
+        // })
+      // } else {
+      //   let i = 2
+      //   while (i < (response.pageCount + 1)) {
+      //     console.log("BEGIN LOOP")
+      //     console.log("i: ", i)
+      //     console.log("job_data at beginning: ", job_data)
+      //     this.queryTheMuseJobsAPI(userPref, i, museIdsToCheck)
+      //     .then(response => {
+      //       museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
+      //       job_data = [...job_data,...response.jobResultArr]
+      //
+      //     })
+      //
+      //       i++
+      //
+      //
+      //   }
+      //   console.log("job data at end of loop", job_data)
+      //    return this.setState({
+      //     jobResultArr: job_data,
+      //     museIds: museIdsToCheck,
+      //     loadingState: false
+      //   })
+      // }
+    // })
 
-      if(response.pageCount < 2) {
-         this.setState({
-          jobResultArr: job_data,
-          museIds: museIdsToCheck,
-          loadingState: false,
-        })
-      } else {
-        let i = 2
-        while (i<=response.pageCount) {
-          this.queryTheMuseJobsAPI(userPref, i, museIdsToCheck)
-          .then(response => {
-            museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
-            let data = job_data.slice(0)
-            return job_data = [...data,...response.jobResultArr]
-          })
-          i++
-        }
-         this.setState({
-          jobResultArr: job_data,
-          museIds: museIdsToCheck,
-          loadingState: false
-        })
-      }
-    })
   }
 
   queryTheMuseJobsAPI = (userPref, pageCount, museIdsToCheck) => {
-    // const userPref = Object.assign({}, this.state.selectedFilters)
-    //
-    // this.setState({
-    //   jobResultArr: [], // to do
-    //   museIds: {}, // to do
-    // })
-
-    // const loadingState = response.results === pageNo
-    console.log(pageCount)
     return searchJobRequest(userPref, pageCount)
     .then(response => {
-      console.log(response)
-      const res = this.createJobArrForState(response.results)
-      return ({
-        pageCount: response.page_count,
-        jobResultArr: res.jobsForState, // to do
-        museIds: res.idsForState, // to do
-      })
+      const res = this.createJobArrForState(response.results, museIdsToCheck)
+      debugger
+      return {pageCount: response.page_count, jobResultArr: res.jobsForState, museIds: res.idsForState}
     })
   }
 
   createJobArrForState = (searchResults, museIdsToCheck) => {
-    console.log(searchResults)
+    console.log("STEP 4.2.4 BEGIN: loop through search results and add to sub-obj to eventually add to state")
     let museIds2 = Object.assign({}, museIdsToCheck)
     let job_data = []
-    console.log(searchResults[0])
     for (let j of searchResults) {
-
       if (!museIds2[j.id] && !this.state.museIds[j.id]) {
         museIds2[j.id] = true
         let data = job_data.slice(0)
         job_data = [...data, this.extractJobData(j)]
       }
     }
+    console.log("STEP 4.2.4 END: return concated job results: ", Object.assign({}, {jobsForState: job_data, idsForState: museIds2}))
     return Object.assign({}, {jobsForState: job_data, idsForState: museIds2})
   }
 
   extractJobData = (j) => {
+    console.log("STEP 4.2.5 BEGIN: extracting relevant info for each job from theMuse Api")
+    console.log("STEP 4.2.5 END: extracted job data: ", {name: j.name, landing_page: j.refs.landing_page, publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)), muse_id: j.id, locations: j.locations.map((l) => l.name).join(" / "), levels: j.levels.map((l) => l.name).join( " / "), company_name: j.company.name, company_muse_id: j.company.id, categories: j.categories.map((m) => m.name).join( " / ")
+  })
+
     return {
       name: j.name,
       landing_page: j.refs.landing_page,
