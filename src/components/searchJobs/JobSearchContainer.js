@@ -56,9 +56,7 @@ class JobSearchContainer extends React.Component {
       // const parsedPref = this.userPreferenceParser()
       // const defaultPreferences = convertAttrStrForDisplay(parsedPref)
       const defaultPreferences = this.userPreferenceParser()
-      console.log("step 3 BEGIN: get parsed user pref obj and parse into readable English — defaultPreference value for handoff: ", defaultPreferences)
       const filterState =  Object.assign({}, defaultPreferences)
-      console.log("step 3 END: parsed user pref to parse into english to save in filter state: ", filterState)
       this.setState({
         loadingState:true,
         selectedFilters: filterState
@@ -67,14 +65,12 @@ class JobSearchContainer extends React.Component {
   }
 
   userPreferenceParser = () => {
-    console.log("step 2 BEGIN: parsed user preferences from user saved preferences => obj parsed by preference criteria")
     let parsed = {
       category: this.props.user.pref_categories,
       level: this.props.user.pref_levels,
       location: this.props.user.pref_locations,
       // industries: this.props.user.pref_industries
     }
-    console.log("step 2 END: criteria-parsed obj: ", parsed)
     return convertAttrStrForDisplay(parsed)
 
   }
@@ -104,8 +100,6 @@ class JobSearchContainer extends React.Component {
   // helper_fn1: accepts array and jobObj =>  extract relevant data for each result && returns updated array
 
   updateJobSearchState = () => {
-    console.log("STEP 4 BEGIN: taking user preferences saved in state and running query with theMuse API")
-    console.log("STEP 4.1 — filter state: ", this.state.selectedFilters)
     const pref = Object.assign({}, this.state.selectedFilters)
 
     let museIdsToCheck = {}
@@ -115,7 +109,7 @@ class JobSearchContainer extends React.Component {
       jobResultArr: response.jobResultArr,
       museIds: response.museIds,
       loadingState: false,
-    }, () => console.log("STEP 4 END: updated state with query results", response)))
+    }))
       // if(response.pageCount < 2) {
         //  this.setState({
         //   jobResultArr: job_data,
@@ -154,13 +148,11 @@ class JobSearchContainer extends React.Component {
     return searchJobRequest(userPref, pageCount)
     .then(response => {
       const res = this.createJobArrForState(response.results, museIdsToCheck)
-      debugger
       return {pageCount: response.page_count, jobResultArr: res.jobsForState, museIds: res.idsForState}
     })
   }
 
   createJobArrForState = (searchResults, museIdsToCheck) => {
-    console.log("STEP 4.2.4 BEGIN: loop through search results and add to sub-obj to eventually add to state")
     let museIds2 = Object.assign({}, museIdsToCheck)
     let job_data = []
     for (let j of searchResults) {
@@ -170,15 +162,10 @@ class JobSearchContainer extends React.Component {
         job_data = [...data, this.extractJobData(j)]
       }
     }
-    console.log("STEP 4.2.4 END: return concated job results: ", Object.assign({}, {jobsForState: job_data, idsForState: museIds2}))
     return Object.assign({}, {jobsForState: job_data, idsForState: museIds2})
   }
 
   extractJobData = (j) => {
-    console.log("STEP 4.2.5 BEGIN: extracting relevant info for each job from theMuse Api")
-    console.log("STEP 4.2.5 END: extracted job data: ", {name: j.name, landing_page: j.refs.landing_page, publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)), muse_id: j.id, locations: j.locations.map((l) => l.name).join(" / "), levels: j.levels.map((l) => l.name).join( " / "), company_name: j.company.name, company_muse_id: j.company.id, categories: j.categories.map((m) => m.name).join( " / ")
-  })
-
     return {
       name: j.name,
       landing_page: j.refs.landing_page,
@@ -284,7 +271,6 @@ class JobSearchContainer extends React.Component {
         <div>loading</div>
       )
     } else {
-          console.log(this.state.selectedFilters)
       return (
 
         <div className="job-search-container">
