@@ -101,45 +101,77 @@ class JobSearchContainer extends React.Component {
 
   updateJobSearchState = () => {
     const pref = Object.assign({}, this.state.selectedFilters)
-
-    let museIdsToCheck = {}
-    let job_data = []
-     this.queryTheMuseJobsAPI(pref, 1, museIdsToCheck)
+    this.setState({
+      jobResultArr: [],
+      museIds: {},
+      pageCount: 0
+    })
+    this.queryTheMuseJobsAPI(pref, 1, {})
     .then(response => this.setState({
       jobResultArr: response.jobResultArr,
       museIds: response.museIds,
-      loadingState: false,
+      pageCount: response.pageCount
     }))
-      // if(response.pageCount < 2) {
-        //  this.setState({
-        //   jobResultArr: job_data,
-        //   museIds: museIdsToCheck,
-        //   loadingState: false,
-        // })
-      // } else {
-      //   let i = 2
-      //   while (i < (response.pageCount + 1)) {
-      //     console.log("BEGIN LOOP")
-      //     console.log("i: ", i)
-      //     console.log("job_data at beginning: ", job_data)
-      //     this.queryTheMuseJobsAPI(userPref, i, museIdsToCheck)
-      //     .then(response => {
-      //       museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
-      //       job_data = [...job_data,...response.jobResultArr]
-      //
-      //     })
-      //
-      //       i++
-      //
-      //
-      //   }
-      //   console.log("job data at end of loop", job_data)
-      //    return this.setState({
-      //     jobResultArr: job_data,
-      //     museIds: museIdsToCheck,
-      //     loadingState: false
-      //   })
-      // }
+    .then(blank => {
+      let i = 2
+      let muse_id_copy = Object.assign({}, this.state.museIds)
+      let jobs_arr_copy = this.state.jobResultArr.slice(0)
+      while (i < this.state.pageCount) {
+        this.queryTheMuseJobsAPI(pref, i, muse_id_copy)
+        .then(response => {
+          muse_id_copy = Object.assign({}, muse_id_copy, response.museIds)
+          jobs_arr_copy = [...jobs_arr_copy,...response.jobResultArr]
+        })
+        console.log(jobs_arr_copy)
+        i++
+        }
+        debugger
+        return this.setState({
+              loadingState: false,
+              jobResultArr: jobs_arr_copy,
+              museIds: muse_id_copy
+            })
+
+
+      })
+//       .then(r => this.setState({
+//             loadingState: false,
+//             jobResultArr: r.jobs_arr_copy,
+//             museIds: r.muse_id_copy
+//           })
+// )
+
+
+    // if(response.pageCount < 2) {
+    //  this.setState({
+    //   jobResultArr: job_data,
+    //   museIds: museIdsToCheck,
+    //   loadingState: false,
+    // })
+    // } else {
+    //   let i = 2
+    //   while (i < (response.pageCount + 1)) {
+    //     console.log("BEGIN LOOP")
+    //     console.log("i: ", i)
+    //     console.log("job_data at beginning: ", job_data)
+    //     this.queryTheMuseJobsAPI(userPref, i, museIdsToCheck)
+    //     .then(response => {
+    //       museIdsToCheck = Object.assign({}, museIdsToCheck, response.museIds)
+    //       job_data = [...job_data,...response.jobResultArr]
+    //
+    //     })
+    //
+    //       i++
+    //
+    //
+    //   }
+    //   console.log("job data at end of loop", job_data)
+    //    return this.setState({
+    //     jobResultArr: job_data,
+    //     museIds: museIdsToCheck,
+    //     loadingState: false
+    //   })
+    // }
     // })
 
   }
