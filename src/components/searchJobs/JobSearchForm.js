@@ -7,7 +7,6 @@ const JobSearchForm = (props) => {
   const options = searchOptions()
 
   const mappedDefaults = () => {
-    console.log(props.selectedFilters)
     let mapped = {}
     Object.keys(props.selectedFilters).map((criteria) => {
       mapped[criteria] = []
@@ -19,7 +18,6 @@ const JobSearchForm = (props) => {
       })
 
     })
-    console.log(mapped)
     return mapped
   }
 
@@ -28,7 +26,6 @@ const JobSearchForm = (props) => {
       <h3>form container</h3>
 
     {Object.keys(options).map((criteria) => {
-      console.log(criteria)
       return (
         <Select
           defaultValue={mappedDefaults()[criteria]}

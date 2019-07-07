@@ -21,6 +21,8 @@ const _helperConvertAttrStrForQuery = (queryKey, attributeString) => {
 
 
 // convert user pref attributes into arrays with readable strings for UI
+
+// ex: {category: "Creative+%26+Design|Data+Science|Engineering"} => {category: ["Creative & Design", "Data Science", "Engineering"]}
 export const convertAttrStrForDisplay = (attributeObj) => {
   let transformedObj = {}
   Object.keys(attributeObj).map((k) => {
@@ -34,7 +36,6 @@ export const convertAttrStrForDisplay = (attributeObj) => {
 }
 
 const _helperConvertAttrStrForDisplay = (str) => {
-  console.log(str)
   return str
   .replace(/["+"]+/g," ")
   .replace(/\%26+/g, "&")
