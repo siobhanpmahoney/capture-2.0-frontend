@@ -4,7 +4,7 @@
 //   category: "Creative+%26+Design|Data+Science|Engineering|Project+%26+Product+Management"
 // }
 
-//convert usr pref attributes into query params for theMuseAPI
+//convert usr pref attributes into query params for the_muse_api
 export const convertAttrStrForQuery = (attributeObj) => {
   return Object.keys(attributeObj).map((k) => {
     if (attributeObj[k] != null) {

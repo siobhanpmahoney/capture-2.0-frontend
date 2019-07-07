@@ -1,4 +1,4 @@
-import {SET_APP_ARR, SET_MUSE_ID_LOOKUP, SET_APP_JOB_ID_LOOKUP} from '../actions'
+import {SET_APP_ARR, SET_MUSE_ID_LOOKUP, SET_APP_JOB_ID_LOOKUP, CREATE_JOB_APP} from '../actions'
 
 
 // job_apps state: app, job, and interview data

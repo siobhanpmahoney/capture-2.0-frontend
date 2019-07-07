@@ -6,7 +6,7 @@ import {Redirect, withRouter} from 'react-router'
 import WithAuth from '../wrappers/WithAuth'
 import {fetchJobAppsAction} from '../actions'
 import {convertAttrStrForDisplay} from '../utils/pref_regex'
-import {searchJobRequest} from '../services/theMuseApi'
+import {searchJobRequest} from '../services/the_muse_api'
 
 import JobSearchList from './searchJobs/JobSearchList'
 

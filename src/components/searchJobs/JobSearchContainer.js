@@ -5,32 +5,11 @@ import { connect } from 'react-redux';
 
 import WithAuth from '../../wrappers/WithAuth'
 import {fetchJobAppsAction} from '../../actions'
+import {extractJobDataForDisplay} from '../../services/data_parsers'
 import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/pref_regex'
-import {searchJobRequest} from '../../services/theMuseApi'
-
-
+import {searchJobRequest} from '../../services/the_muse_api'
 import JobSearchForm from './JobSearchForm'
 import JobSearchList from './JobSearchList'
-
-
-
-// hold state —> search pref., etc.
-
-// to do
-// I. SEARCH FORM
-
-// I.2.  define fn — sort selection function (#JobSearchContainer)
-// I.3.  define fn — apply filter and sort selections (#Container)
-// I.5.  paginate search results
-
-// II. BOOKMARK FEATURE
-// II.1.  Create fn — toggle save/unsave item
-// II.2.  Add bookmark icon
-// II.3   Style bookmark icon based on status
-
-
-// REFACTOR
-//  create util fn — parsing theMuse API response
 
 
 class JobSearchContainer extends React.Component {
@@ -89,7 +68,6 @@ class JobSearchContainer extends React.Component {
   queryTheMuseJobsAPI = (userPref, pageCount, museIdsToCheck) => {
     return searchJobRequest(userPref, pageCount)
     .then(response => {
-      console.log(response.results)
       const res = this.createJobArrForState(response.results, museIdsToCheck)
       return {pageCount: response.page_count, jobResultArr: res.jobsForState, museIds: res.idsForState}
     })
@@ -102,24 +80,10 @@ class JobSearchContainer extends React.Component {
       if (!museIds2[j.id] && !this.state.museIds[j.id]) {
         museIds2[j.id] = true
         let data = job_data.slice(0)
-        job_data = [...data, this.extractJobData(j)]
+        job_data = [...data, extractJobDataForDisplay(j)]
       }
     }
     return Object.assign({}, {jobsForState: job_data, idsForState: museIds2})
-  }
-
-  extractJobData = (j) => {
-    return {
-      name: j.name,
-      landing_page: j.refs.landing_page,
-      publication_date: new Intl.DateTimeFormat('en-US').format(new Date(j.publication_date)),
-      muse_id: j.id,
-      locations: j.locations.map((l) => l.name).join(" / "),
-      levels: j.levels.map((l) => l.name).join( " / "),
-      company_name: j.company.name,
-      company_muse_id: j.company.id,
-      categories: j.categories.map((m) => m.name).join( " / ")
-    }
   }
 
   formListener = (event, criteria) => {
@@ -138,12 +102,6 @@ class JobSearchContainer extends React.Component {
   }
 
 
-
-
-  // helper fn
-
-
-
   render() {
     if (!!this.state.loadingState) {
       return (
@@ -156,6 +114,8 @@ class JobSearchContainer extends React.Component {
           <h1>Result Count: {this.state.jobResultArr.length}</h1>
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
           <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
+
+
         </div>
       )
     }

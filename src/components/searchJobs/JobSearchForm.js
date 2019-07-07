@@ -28,6 +28,7 @@ const JobSearchForm = (props) => {
     {Object.keys(options).map((criteria) => {
       return (
         <Select
+          key={criteria}
           defaultValue={mappedDefaults()[criteria]}
           isMulti
           isSearchable
