@@ -8,9 +8,29 @@ import { connect } from 'react-redux';
 import WithAuth from '../../wrappers/WithAuth'
 
 const JobSearchListItem = (props) => {
+  const toggleBookMark = () => {
+    if (!props.saved) {
+      return (
+        <i class="material-icons" onClick={() => props.createAppAction(props.job, props.user.id)}>
+          bookmark_border
+        </i>
+      )
+    } else {
+      return (
+        <i class="material-icons">
+          bookmark
+        </i>
+      )
+    }
+  }
+
+
   return (
     <div className="job-search-results-item-wrapper">
-      <button onClick={() => props.createAppAction(props.job, props.user.id)}>SAVE ME</button>
+      <div className="toggle-save">
+        {toggleBookMark()}
+      </div>
+
       <div className="job-card-main">
         <div className="job-list-item-company">
           {props.job.company_name}
@@ -44,7 +64,7 @@ function mapStateToProps(state, props) {
   return {
     user: state.user,
     job_apps: state.job_apps,
-    theMuseAppHash: state.job_apps && state.job_apps.theMuseAppHash
+    theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash
   }
 }
 

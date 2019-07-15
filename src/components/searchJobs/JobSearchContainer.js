@@ -108,12 +108,15 @@ class JobSearchContainer extends React.Component {
         <div>loading</div>
       )
     } else {
+      console.log("job container state")
+      console.log("job_apps: ", this.props.job_apps)
+      console.log("theMuseJobIdSavedStatusHash", this.props.theMuseJobIdSavedStatusHash)
       return (
 
         <div className="job-search-container">
           <h1>Result Count: {this.state.jobResultArr.length}</h1>
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
-          <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseAppHash = {this.props.job_apps.theMuseAppHash} />
+          <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseJobIdSavedStatusHash = {this.props.job_apps.theMuseJobIdSavedStatusHash} />
 
 
         </div>
@@ -127,7 +130,7 @@ function mapStateToProps(state, props) {
   return {
     user: state.user,
     job_apps: state.job_apps,
-    theMuseAppHash: state.job_apps && state.job_apps.theMuseAppHash
+    theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash
   }
 }
 

@@ -7,7 +7,9 @@ export const SET_APP_ARR = 'SET_APP_ARR'
 export const SET_MUSE_ID_LOOKUP = 'SET_MUSE_ID_LOOKUP'
 export const SET_APP_JOB_ID_LOOKUP = 'SET_APP_JOB_ID_LOOKUP'
 export const CREATE_COMPANY = 'CREATE_COMPANY'
-export const CREATE_JOB_APP = 'CREATE_JOB_APP'
+export const ADD_APP_DATA_TO_APP_ARRAY = 'ADD_APP_DATA_TO_APP_ARRAY'
+export const ADD_MUSE_ID_TO_SAVED_STATUS_HASH = 'ADD_MUSE_ID_TO_SAVED_STATUS_HASH'
+export const ADD_APP_ID_TO_JOB_DATA_MAP = 'ADD_APP_ID_TO_JOB_DATA_MAP'
 
 // make request for user data with jwt token as param ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
@@ -28,18 +30,18 @@ export function fetchJobAppsAction(user_id) {
   return(dispatch) => {
     return fetchUserJobApps(user_id)
     .then(json => {
-      let theMuseAppHash = {}
-      let appJobDataHash = {}
+      let theMuseJobIdSavedStatusHash = {}
+      let appIdJobDataMap = {}
       console.log(json)
       json["apps"].forEach((a) => {
         let muse_id = ""
         json["jobs"].find((j) => {
           if (j.id == a.job_id) {
-            appJobDataHash[a.id] = j
+            appIdJobDataMap[a.id] = j
             muse_id = j.muse_id
           }
         })
-        theMuseAppHash[muse_id] = a.id
+        theMuseJobIdSavedStatusHash[muse_id] = a.id
       })
 
       dispatch({
@@ -49,12 +51,12 @@ export function fetchJobAppsAction(user_id) {
 
       dispatch({
         type: SET_MUSE_ID_LOOKUP,
-        payload: theMuseAppHash
+        payload: theMuseJobIdSavedStatusHash
       })
 
       dispatch({
         type: SET_APP_JOB_ID_LOOKUP,
-        payload: appJobDataHash
+        payload: appIdJobDataMap
       })
 
     })
@@ -67,23 +69,36 @@ export function fetchJobAppsAction(user_id) {
 // create new application
 export function createAppAction(jobData, userId) {
   return(dispatch) => {
-    console.log(jobData)
+    console.log("jobData", jobData)
     return createCompany(jobData["company_muse_id"])
     .then(res => {
-      console.log(res)
+      console.log("create company response", res)
       const company_data = res
       console.log("company created on backend", company_data)
-      console.log("id to pass in", company_data.id)
+      console.log("company id to pass in", company_data.id)
       let job = Object.assign({}, jobData, {company_id: company_data.id})
       return createJob(job)
         .then(job_data => {
-          console.log(job_data)
+          console.log("job_data after getting created", job_data)
           console.log({user_id: userId, job_id: job_data.id})
           createApp({user_id: userId, job_id: job_data.id})
             .then(response => {
+              let museId = job_data.muse_id
+              let museIdAppIdObject = {[museId]: response["id"]}
+              let appIdJobDataObject = {[response["id"]]: job_data}
               dispatch({
-                type: CREATE_JOB_APP,
+                type: ADD_APP_DATA_TO_APP_ARRAY,
                 payload: job_data
+              })
+
+              dispatch({
+                type: ADD_MUSE_ID_TO_SAVED_STATUS_HASH,
+                payload: museIdAppIdObject
+              })
+
+              dispatch({
+                type: ADD_APP_ID_TO_JOB_DATA_MAP,
+                payload: appIdJobDataObject
               })
 
               dispatch({
@@ -91,6 +106,20 @@ export function createAppAction(jobData, userId) {
                 payload: company_data
               })
             })
+
+
+//
+// dispatch({
+//   type: SET_MUSE_ID_LOOKUP,
+//   payload: theMuseJobIdSavedStatusHash
+// })
+//
+// dispatch({
+//   type: SET_APP_JOB_ID_LOOKUP,
+//   payload: appIdJobDataMap
+// })
+
+
         })
      })
   }
