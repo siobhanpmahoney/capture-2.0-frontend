@@ -1,6 +1,6 @@
 import React from 'react'
 import {withRouter, Link} from 'react-router-dom'
-import {createAppAction} from '../../actions'
+import {createAppAction, deleteAppAction} from '../../actions'
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,7 +17,7 @@ const JobSearchListItem = (props) => {
       )
     } else {
       return (
-        <i class="material-icons">
+        <i class="material-icons" onClick={() => props.deleteAppAction(props.job, props.user.id)}>
           bookmark
         </i>
       )
@@ -69,7 +69,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({createAppAction}, dispatch)
+  return bindActionCreators({createAppAction, deleteAppAction}, dispatch)
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobSearchListItem)))

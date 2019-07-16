@@ -1,4 +1,4 @@
-import {loginCurrentUser, fetchCurrentUser,fetchUserJobApps, createCompany, createJob, createApp} from '../services/api_calls'
+import {loginCurrentUser, fetchCurrentUser,fetchUserJobApps, createCompany, createJob, createApp, deleteApp} from '../services/api_calls'
 import ls from 'local-storage'
 
 
@@ -10,6 +10,9 @@ export const CREATE_COMPANY = 'CREATE_COMPANY'
 export const ADD_APP_DATA_TO_APP_ARRAY = 'ADD_APP_DATA_TO_APP_ARRAY'
 export const ADD_MUSE_ID_TO_SAVED_STATUS_HASH = 'ADD_MUSE_ID_TO_SAVED_STATUS_HASH'
 export const ADD_APP_ID_TO_JOB_DATA_MAP = 'ADD_APP_ID_TO_JOB_DATA_MAP'
+export const DELETE_APP_DATA_FROM_APP_ARRAY = 'DELETE_APP_DATA_FROM_APP_ARRAY'
+export const DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH = 'DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH'
+export const DELETE_APP_ID_FROM_JOB_DATA_MAP = 'DELETE_APP_ID_FROM_JOB_DATA_MAP'
 
 // make request for user data with jwt token as param ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
@@ -69,18 +72,12 @@ export function fetchJobAppsAction(user_id) {
 // create new application
 export function createAppAction(jobData, userId) {
   return(dispatch) => {
-    console.log("jobData", jobData)
     return createCompany(jobData["company_muse_id"])
     .then(res => {
-      console.log("create company response", res)
       const company_data = res
-      console.log("company created on backend", company_data)
-      console.log("company id to pass in", company_data.id)
       let job = Object.assign({}, jobData, {company_id: company_data.id})
       return createJob(job)
         .then(job_data => {
-          console.log("job_data after getting created", job_data)
-          console.log({user_id: userId, job_id: job_data.id})
           createApp({user_id: userId, job_id: job_data.id})
             .then(response => {
               let museId = job_data.muse_id
@@ -107,21 +104,30 @@ export function createAppAction(jobData, userId) {
               })
             })
 
-
-//
-// dispatch({
-//   type: SET_MUSE_ID_LOOKUP,
-//   payload: theMuseJobIdSavedStatusHash
-// })
-//
-// dispatch({
-//   type: SET_APP_JOB_ID_LOOKUP,
-//   payload: appIdJobDataMap
-// })
-
-
         })
      })
+  }
+}
+
+export function deleteAppAction(appData, userId) {
+  return (dispatch) => {
+    return deleteApp(appData)
+    .then(response => {
+      dispatch({
+        type: DELETE_APP_DATA_FROM_APP_ARRAY,
+        payload: response
+      })
+
+      dispatch({
+        type: DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH,
+        payload: response
+      })
+
+      dispatch({
+        type: DELETE_APP_ID_FROM_JOB_DATA_MAP,
+        payload: response
+      })
+    })
   }
 }
 

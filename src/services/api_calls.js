@@ -63,14 +63,26 @@ export const fetchUserJobApps = (user_id) => {
 }
 
 
+const getCompanyData = (company_id) => {
+  return fetchCompanyData(company_id)
+  .then(json => parseCompanyDataAPIResponse(json))
+  .then(data => {
+    return data
+  })
+}
 
-// 1. create company
-// 2. create job
-// 3. create application
-// 4. update frontend state
+export const createCompany = (company_id) => {
+  return getCompanyData(company_id)
+  .then(data => {
+    return fetch(`${API_ROOT}/companies`, {
+      method: 'POST',
+      headers: AUTHORIZED_HEADERS(),
+      body: JSON.stringify({company: data})
+  })
+  .then(response => response.json())
+})
+}
 
-
-//
 export const createJob = (job_params) => {
   console.log(job_params)
   const jobs_url = `${API_ROOT}/jobs`
@@ -93,23 +105,12 @@ export const createApp = (app_params) => {
   .then(response => response.json())
 }
 
-
-export const createCompany = (company_id) => {
-  return getCompanyData(company_id)
-  .then(data => {
-    return fetch(`${API_ROOT}/companies`, {
-      method: 'POST',
-      headers: AUTHORIZED_HEADERS(),
-      body: JSON.stringify({company: data})
+export const deleteApp = (app_params) => {
+  const apps_url = `${API_ROOT}/apps`
+  return fetch(apps_url, {
+    method: 'DELETE',
+    headers: AUTHORIZED_HEADERS(),
+    body: JSON.stringify({app: app_params})
   })
   .then(response => response.json())
-})
-}
-
-const getCompanyData = (company_id) => {
-  return fetchCompanyData(company_id)
-  .then(json => parseCompanyDataAPIResponse(json))
-  .then(data => {
-    return data
-  })
 }

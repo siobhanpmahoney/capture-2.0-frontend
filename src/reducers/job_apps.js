@@ -5,7 +5,11 @@ import {
   CREATE_COMPANY,
   ADD_APP_DATA_TO_APP_ARRAY,
   ADD_MUSE_ID_TO_SAVED_STATUS_HASH,
-  ADD_APP_ID_TO_JOB_DATA_MAP} from '../actions'
+  ADD_APP_ID_TO_JOB_DATA_MAP,
+  DELETE_APP_DATA_FROM_APP_ARRAY,
+  DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH,
+  DELETE_APP_ID_FROM_JOB_DATA_MAP
+} from '../actions'
 
 
 // job_apps state: app, job, and interview data
@@ -60,6 +64,18 @@ export const job_apps = (state = { appArray: [], theMuseJobIdSavedStatusHash: {}
         ...state,
         "appIdJobDataMap": Object.assign({}, state["appIdJobDataMap"], action.payload)
       }
+
+    case DELETE_APP_DATA_FROM_APP_ARRAY:
+      let appArrayCopy = state.appArray.slice(0)
+      let jobIndex = appArrayCopy.find((app, index, appArrayCopy) => {
+        if (app.id == action.payload.id) {
+          return index
+        }
+      })
+
+      state = Object.assign({}, state, {"appArr": [...appArrayCopy.slice(0, jobIndex),... appArrayCopy]})
+
+      return state;
 
     default:
       return state;
