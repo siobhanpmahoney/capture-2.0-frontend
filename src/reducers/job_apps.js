@@ -62,7 +62,7 @@ export const job_apps = (state = { appArray: [], theMuseJobIdSavedStatusHash: {}
     case ADD_APP_ID_TO_JOB_DATA_MAP:
       return {
         ...state,
-        "appIdJobDataMap": Object.assign({}, state["appIdJobDataMap"], action.payload)
+        appIdJobDataMap: Object.assign({}, state["appIdJobDataMap"], action.payload)
       }
 
     case DELETE_APP_DATA_FROM_APP_ARRAY:
@@ -73,17 +73,14 @@ export const job_apps = (state = { appArray: [], theMuseJobIdSavedStatusHash: {}
         }
       })
 
-      state = Object.assign({}, state, {"appArr": [...appArrayCopy.slice(0, jobIndex),... appArrayCopy]})
-
-      return state;
-
+      return Object.assign({}, state, {"appArr": [...appArrayCopy.slice(0, jobIndex),... appArrayCopy]});
+      
 
     case DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH:
       let theMuseJobIdCopy = Object.assign({}, state.theMuseJobIdSavedStatusHash)
 
       delete theMuseJobIdCopy[action.payload.job.muse_id]
-      state = Object.assign({}, {"theMuseJobIdSavedStatusHash": theMuseJobIdCopy})
-      return state
+      return Object.assign({}, state, {"theMuseJobIdSavedStatusHash": theMuseJobIdCopy})
 
     default:
       return state;
