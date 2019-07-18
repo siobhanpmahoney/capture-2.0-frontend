@@ -16,7 +16,6 @@ const JobSearchListItem = (props) => {
         </i>
       )
     } else {
-      console.log(props)
       return (
         <i className="material-icons" onClick={() => props.deleteAppAction(props.appId)}>
           bookmark

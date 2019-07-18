@@ -26,7 +26,6 @@ const AUTHORIZED_HEADERS = () => {
 
 
 export const loginCurrentUser = (credentials) => {
-  console.log(credentials)
   const user = {user: credentials}
   return fetch(`${API_ROOT}/login`, {
     method: 'POST',
@@ -108,7 +107,6 @@ export const createCompany = (company_id) => {
 }
 
 export const createJob = (job_params) => {
-  console.log(job_params)
   const jobs_url = `${API_ROOT}/jobs`
   return fetch(jobs_url, {
     method: 'POST',

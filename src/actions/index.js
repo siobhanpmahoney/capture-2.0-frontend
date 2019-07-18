@@ -44,7 +44,6 @@ export function fetchCurrentUserAction(jwt) {
   return(dispatch) => {
     return fetchCurrentUser(jwt)
     .then(json => {
-      console.log("in fetchCurrentUserAction", json)
       dispatch({
         type: SET_CURRENT_USER,
         payload: json
@@ -55,11 +54,9 @@ export function fetchCurrentUserAction(jwt) {
 }
 
 export function fetchJobAppsAction(user_id) {
-  console.log("amigettingcalled?")
   return(dispatch) => {
     return fetchUserJobApps(user_id)
     .then(json => {
-      console.log("in fetchJobAppsAction — API response", json)
       let theMuseJobIdSavedStatusHash = {}
       let appIdJobDataMap = {}
 
@@ -178,12 +175,6 @@ export function createAppAction(jobData, userId) {
               let museId = job_data.muse_id
               let museIdAppIdObject = {[museId]: response["id"]}
               let appIdJobDataObject = {[response["id"]]: job_data}
-
-              console.log("job_data", job_data)
-              console.log("appIdJobDataObject", appIdJobDataObject)
-              console.log("museIdAppIdObject", museIdAppIdObject)
-
-
               // dispatch({
               //   type: ADD_APP_DATA_TO_APP_ARRAY,
               //   payload: job_data
@@ -256,7 +247,6 @@ export function deleteAppAction(appData, userId) {
   return (dispatch) => {
     return deleteApp(appData)
     .then(response => {
-      console.log(response)
       // dispatch({
       //   type: DELETE_APP_DATA_FROM_APP_ARRAY,
       //   payload: response
@@ -317,16 +307,9 @@ export function deleteAppAction(appData, userId) {
 
 
 export function createCompanyAction(data) {
-  // console.log(data.company_muse_id)
   return(dispatch) => {
      return createCompany(data.company_muse_id)
     .then(res => console.log(res.company))
-    // .then(company_json => {
-    //   console.log("company_json")
-    //   dispatch({
-    //     type: CREATE_COMPANY,
-    //     payload: company_json
-    //   })
-    // })
+
   }
 }
