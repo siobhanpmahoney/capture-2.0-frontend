@@ -1,4 +1,4 @@
-import {loginCurrentUser, fetchCurrentUser,fetchUserJobApps, createCompany, createJob, createApp, deleteApp} from '../services/api_calls'
+import {loginCurrentUser, fetchCurrentUser, fetchUserJobApps, fetchJobs, fetchApps, createCompany, createJob, createApp, deleteApp} from '../services/api_calls'
 import ls from 'local-storage'
 
 
@@ -14,12 +14,21 @@ export const DELETE_APP_DATA_FROM_APP_ARRAY = 'DELETE_APP_DATA_FROM_APP_ARRAY'
 export const DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH = 'DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH'
 export const DELETE_APP_ID_FROM_JOB_DATA_MAP = 'DELETE_APP_ID_FROM_JOB_DATA_MAP'
 
+export const SET_APP_ARRAY = 'SET_APP_ARRAY'
+export const SET_APP_INDEXED_DATA = 'SET_APP_INDEXED_DATA'
+export const SET_APP_ID_JOB_ID_HASH = 'SET_APP_ID_JOB_ID_HASH'
+export const SET_JOB_ID_APP_ID_HASH = 'SET_JOB_ID_APP_ID_HASH'
+
+export const SET_JOB_INDEXED_DATA = 'SET_JOB_INDEXED_DATA'
+export const SET_MUSE_ID_JOB_ID_HASH = 'SET_MUSE_ID_JOB_ID_HASH'
+export const SET_JOB_ID_MUSE_ID_HASH = 'SET_JOB_ID_MUSE_ID_HASH'
+
 // make request for user data with jwt token as param ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
   return(dispatch) => {
     return fetchCurrentUser(jwt)
     .then(json => {
-      console.log(json)
+      console.log("in fetchCurrentUserAction", json)
       dispatch({
         type: SET_CURRENT_USER,
         payload: json
@@ -33,9 +42,10 @@ export function fetchJobAppsAction(user_id) {
   return(dispatch) => {
     return fetchUserJobApps(user_id)
     .then(json => {
+      console.log("in fetchJobAppsAction — API response", json)
       let theMuseJobIdSavedStatusHash = {}
       let appIdJobDataMap = {}
-      console.log(json)
+
       json["apps"].forEach((a) => {
         let muse_id = ""
         json["jobs"].find((j) => {
@@ -62,6 +72,74 @@ export function fetchJobAppsAction(user_id) {
         payload: appIdJobDataMap
       })
 
+    })
+  }
+}
+
+export function fetchJobAppsAction2() {
+  let appArray = []
+  let appIndexedData = {}
+  let appIdJobId = {}
+  let jobIdAppIdHash = {}
+
+  let jobIndexedData = {}
+  let museIdJobIdHash = {}
+  let jobIdMuseIdHash = {}
+
+  return(dispatch) => {
+    return fetchApps()
+    .then(response => {
+      appArray = response
+      return fetchJobs()
+      .then(res => {
+
+        appArray.forEach((app) => {
+          appIndexedData[app.id] = app
+          appIdJobId[app.id] = app.job_id
+          jobIdAppIdHash[app.job_id] = app.id
+        })
+
+        res.forEach((job) => {
+          jobIndexedData[job.id] = job
+          jobIdMuseIdHash[job.id] = parseInt(job.muse_id)
+          museIdJobIdHash[job.muse_id] = job.id
+        })
+
+        dispatch({
+          type: SET_APP_ARRAY,
+          apps: appArray
+        })
+
+        dispatch({
+          type: SET_APP_INDEXED_DATA,
+          app_data: appIndexedData
+        })
+
+        dispatch({
+          type: SET_APP_ID_JOB_ID_HASH,
+          app_ids_job_ids: appIdJobId
+        })
+
+        dispatch({
+          type: SET_JOB_ID_APP_ID_HASH,
+          job_ids_app_ids: jobIdAppIdHash
+        })
+
+        dispatch({
+          type: SET_JOB_INDEXED_DATA,
+          job_data: jobIndexedData
+        })
+
+        dispatch({
+          type: SET_MUSE_ID_JOB_ID_HASH,
+          muse_ids_job_ids: jobIdMuseIdHash
+        })
+
+        dispatch({
+          type: SET_JOB_ID_MUSE_ID_HASH,
+          job_ids_muse_ids: museIdJobIdHash
+        })
+      })
     })
   }
 }

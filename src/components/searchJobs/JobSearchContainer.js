@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import WithAuth from '../../wrappers/WithAuth'
-import {fetchJobAppsAction} from '../../actions'
+import {fetchJobAppsAction, fetchJobAppsAction2} from '../../actions'
 import {extractJobDataForDisplay} from '../../services/data_parsers'
 import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/pref_regex'
 import {searchJobRequest} from '../../services/the_muse_api'
@@ -15,7 +15,7 @@ import JobSearchList from './JobSearchList'
 class JobSearchContainer extends React.Component {
   constructor(props) {
     super(props)
-
+    this.props.fetchJobAppsAction2()
     this.state = {
       resultPageCount: 0,
       currentPage: null,
@@ -108,9 +108,23 @@ class JobSearchContainer extends React.Component {
         <div>loading</div>
       )
     } else {
-      console.log("job container state")
-      console.log("job_apps: ", this.props.job_apps)
-      console.log("theMuseJobIdSavedStatusHash", this.props.theMuseJobIdSavedStatusHash)
+      const appDataArray = this.props.job_apps.appDataArray
+      const appIndexedDataHash = this.props.job_apps.appIndexedDataHash
+      const appIdJobIdHash = this.props.job_apps.appIdJobIdHash
+      const jobIdAppIdHash = this.props.job_apps.jobIdAppIdHash
+      const jobIndexedDataHash = this.props.job_apps.jobIndexedDataHash
+const museIdJobIdHash = this.props.job_apps.museIdJobIdHash
+const jobIdMuseIdHash = this.props.job_apps.jobIdMuseIdHash
+
+      console.log("appDataArray", appDataArray)
+      console.log("appIndexedDataHash", appIndexedDataHash)
+      console.log("appIdJobIdHash", appIdJobIdHash)
+      console.log("jobIdAppIdHash", jobIdAppIdHash)
+
+      console.log("jobIndexedDataHash", jobIndexedDataHash,)
+      console.log("museIdJobIdHash", museIdJobIdHash,)
+      console.log("jobIdMuseIdHash", jobIdMuseIdHash)
+
       return (
 
         <div className="job-search-container">
@@ -135,7 +149,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({fetchJobAppsAction}, dispatch)
+  return bindActionCreators({fetchJobAppsAction, fetchJobAppsAction2}, dispatch)
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobSearchContainer)))

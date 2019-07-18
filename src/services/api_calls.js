@@ -62,6 +62,30 @@ export const fetchUserJobApps = (user_id) => {
   .then(response => response.json())
 }
 
+export const fetchJobs = () => {
+  const url = `${API_ROOT}/jobs`
+  const jwt = ls.get('jwt_token')
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${jwt}`
+    }
+  })
+  .then(response => response.json())
+}
+
+export const fetchApps = () => {
+  const url = `${API_ROOT}/apps`
+  const jwt = ls.get('jwt_token')
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${jwt}`
+    }
+  })
+  .then(response => response.json())
+}
+
 
 const getCompanyData = (company_id) => {
   return fetchCompanyData(company_id)
