@@ -113,6 +113,7 @@ export function deleteAppAction(appData, userId) {
   return (dispatch) => {
     return deleteApp(appData)
     .then(response => {
+      console.log(response)
       dispatch({
         type: DELETE_APP_DATA_FROM_APP_ARRAY,
         payload: response

@@ -12,7 +12,8 @@ const JobSearchList = (props) => {
   return (
     <div className="job-search-list">
       {props.jobSearchResults.map((j) => {
-        return <JobSearchListItem job={j} key={j.muse_id} saved={!!props.theMuseJobIdSavedStatusHash[j.muse_id]} />
+        let appId = !!props.theMuseJobIdSavedStatusHash[j.muse_id] ? props.theMuseJobIdSavedStatusHash[j.muse_id] : null
+        return <JobSearchListItem job={j} key={j.muse_id} saved={!!props.theMuseJobIdSavedStatusHash[j.muse_id]} appId = {appId}/>
       })}
 
     </div>

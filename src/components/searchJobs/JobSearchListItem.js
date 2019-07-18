@@ -16,8 +16,9 @@ const JobSearchListItem = (props) => {
         </i>
       )
     } else {
+      console.log(props)
       return (
-        <i class="material-icons" onClick={() => props.deleteAppAction(props.job, props.user.id)}>
+        <i class="material-icons" onClick={() => props.deleteAppAction(props.appId)}>
           bookmark
         </i>
       )

@@ -77,6 +77,14 @@ export const job_apps = (state = { appArray: [], theMuseJobIdSavedStatusHash: {}
 
       return state;
 
+
+    case DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH:
+      let theMuseJobIdCopy = Object.assign({}, state.theMuseJobIdSavedStatusHash)
+
+      delete theMuseJobIdCopy[action.payload.job.muse_id]
+      state = Object.assign({}, {"theMuseJobIdSavedStatusHash": theMuseJobIdCopy})
+      return state
+
     default:
       return state;
   }

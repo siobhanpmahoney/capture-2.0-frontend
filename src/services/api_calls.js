@@ -105,12 +105,12 @@ export const createApp = (app_params) => {
   .then(response => response.json())
 }
 
-export const deleteApp = (app_params) => {
-  const apps_url = `${API_ROOT}/apps`
+export const deleteApp = (appId) => {
+  const apps_url = `${API_ROOT}/apps/${appId}`
   return fetch(apps_url, {
     method: 'DELETE',
     headers: AUTHORIZED_HEADERS(),
-    body: JSON.stringify({app: app_params})
+    body: JSON.stringify({id: appId})
   })
   .then(response => response.json())
 }
