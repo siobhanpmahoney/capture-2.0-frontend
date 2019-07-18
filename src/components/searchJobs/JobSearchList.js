@@ -9,16 +9,26 @@ import WithAuth from '../../wrappers/WithAuth'
 
 
 const JobSearchList = (props) => {
-  return (
-    <div className="job-search-list">
-      {props.jobSearchResults.map((j) => {
-        let app = !!props.museIdJobIdHash[j.muse_id] ? props.appIndexedDataHash[props.jobIdAppIdHash[props.museIdJobIdHash[j.muse_id]]] : null
-        let appId = (!!app && app.id) ? app.id : null
-        return <JobSearchListItem job={j} app = {app} key={j.muse_id} saved={!!props.museIdJobIdHash[j.muse_id]} appId = {appId}/>
-      })}
+  if (!!props.museIdJobIdHash) {
+    // console.log(props.museIdJobIdHash["1627814"])
+    // const idx = props.museIdJobIdHash["1627814"]
+    // console.log(idx)
+    // console.log(props.appIndexedDataHash[props.jobIdAppIdHash[props.museIdJobIdHash[j.muse_id]]])
+    // console.log(props.appIndexedDataHash[props.jobIdAppIdHash[props.museIdJobIdHash[jo.muse_id]]])
+    // console.log(props.jobIndexedDataHash)
+    return (
+      <div className="job-search-list">
+        {props.jobSearchResults.map((j) => {
+          let app = !!props.museIdJobIdHash[j.muse_id] ? props.appIndexedDataHash[props.jobIdAppIdHash[props.museIdJobIdHash[j.muse_id]]] : null
+          console.log("app: ", app)
+          let appId = (!!app && app.id) ? app.id : null
+          return <JobSearchListItem job={j} app = {app} key={j.muse_id} saved={!!props.museIdJobIdHash[j.muse_id]} appId = {appId}/>
+        })}
 
-    </div>
-  )
+      </div>
+    )
+  }
+
 }
 
 function mapStateToProps(state, props) {

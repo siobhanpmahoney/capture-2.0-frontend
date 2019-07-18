@@ -23,6 +23,14 @@ export const SET_JOB_INDEXED_DATA = 'SET_JOB_INDEXED_DATA'
 export const SET_MUSE_ID_JOB_ID_HASH = 'SET_MUSE_ID_JOB_ID_HASH'
 export const SET_JOB_ID_MUSE_ID_HASH = 'SET_JOB_ID_MUSE_ID_HASH'
 
+export const ADD_TO_APP_ARRAY = 'ADD_TO_APP_ARRAY'
+export const ADD_TO_APP_INDEXED_DATA = 'ADD_TO_APP_INDEXED_DATA'
+export const ADD_TO_APP_ID_JOB_ID_HASH = 'ADD_TO_APP_ID_JOB_ID_HASH'
+export const ADD_TO_JOB_ID_APP_ID_HASH = 'ADD_TO_JOB_ID_APP_ID_HASH'
+export const ADD_TO_JOB_INDEXED_DATA = 'ADD_TO_JOB_INDEXED_DATA'
+export const ADD_TO_MUSE_ID_JOB_ID_HASH = 'ADD_TO_MUSE_ID_JOB_ID_HASH'
+export const ADD_TO_JOB_ID_MUSE_ID_HASH = 'ADD_TO_JOB_ID_MUSE_ID_HASH'
+
 // make request for user data with jwt token as param ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
   return(dispatch) => {
@@ -102,7 +110,7 @@ export function fetchJobAppsAction2() {
 
         res.forEach((job) => {
           jobIndexedData[job.id] = job
-          jobIdMuseIdHash[job.id] = parseInt(job.muse_id)
+          jobIdMuseIdHash[job.id] = job.muse_id
           museIdJobIdHash[job.muse_id] = job.id
         })
 
@@ -133,12 +141,12 @@ export function fetchJobAppsAction2() {
 
         dispatch({
           type: SET_MUSE_ID_JOB_ID_HASH,
-          muse_ids_job_ids: jobIdMuseIdHash
+          muse_ids_job_ids: museIdJobIdHash
         })
 
         dispatch({
           type: SET_JOB_ID_MUSE_ID_HASH,
-          job_ids_muse_ids: museIdJobIdHash
+          job_ids_muse_ids: jobIdMuseIdHash
         })
       })
     })
@@ -162,20 +170,68 @@ export function createAppAction(jobData, userId) {
               let museId = job_data.muse_id
               let museIdAppIdObject = {[museId]: response["id"]}
               let appIdJobDataObject = {[response["id"]]: job_data}
+
+              console.log("job_data", job_data)
+              console.log("appIdJobDataObject", appIdJobDataObject)
+              console.log("museIdAppIdObject", museIdAppIdObject)
+
+
+              // dispatch({
+              //   type: ADD_APP_DATA_TO_APP_ARRAY,
+              //   payload: job_data
+              // })
+              //
+              // dispatch({
+              //   type: ADD_MUSE_ID_TO_SAVED_STATUS_HASH,
+              //   payload: museIdAppIdObject
+              // })
+              //
+              // dispatch({
+              //   type: ADD_APP_ID_TO_JOB_DATA_MAP,
+              //   payload: appIdJobDataObject
+              // })
+
+
+
+
               dispatch({
-                type: ADD_APP_DATA_TO_APP_ARRAY,
-                payload: job_data
+                type: ADD_TO_APP_ARRAY,
+                app: response
               })
 
               dispatch({
-                type: ADD_MUSE_ID_TO_SAVED_STATUS_HASH,
-                payload: museIdAppIdObject
+                type: ADD_TO_APP_INDEXED_DATA,
+                appData: {[response["id"]]: response}
               })
 
               dispatch({
-                type: ADD_APP_ID_TO_JOB_DATA_MAP,
-                payload: appIdJobDataObject
+                type: ADD_TO_APP_ID_JOB_ID_HASH,
+                appIdJobId: {[response["id"]]: response["job_id"]}
               })
+
+              dispatch({
+                type: ADD_TO_JOB_ID_APP_ID_HASH,
+                jobIdAppId: {[response["job_id"]]: response["id"]}
+              })
+
+              dispatch({
+                type: ADD_TO_JOB_INDEXED_DATA,
+                job_data: {[response["job_id"]]: job_data}
+              })
+
+              dispatch({
+                type: ADD_TO_MUSE_ID_JOB_ID_HASH,
+                muse_id_job_id: {[job_data["muse_id"]]: job_data["id"]}
+              })
+
+              dispatch({
+                type: ADD_TO_JOB_ID_MUSE_ID_HASH,
+                job_id_muse_id: {[job_data["id"]]: job_data["muse_id"]}
+              })
+
+
+
+
 
               dispatch({
                 type: CREATE_COMPANY,

@@ -16,7 +16,15 @@ import {
   SET_JOB_ID_APP_ID_HASH,
   SET_JOB_INDEXED_DATA,
   SET_MUSE_ID_JOB_ID_HASH,
-  SET_JOB_ID_MUSE_ID_HASH
+  SET_JOB_ID_MUSE_ID_HASH,
+
+  ADD_TO_APP_ARRAY,
+ADD_TO_APP_INDEXED_DATA,
+ADD_TO_APP_ID_JOB_ID_HASH,
+ADD_TO_JOB_ID_APP_ID_HASH,
+ADD_TO_JOB_INDEXED_DATA,
+ADD_TO_MUSE_ID_JOB_ID_HASH,
+ADD_TO_JOB_ID_MUSE_ID_HASH
 } from '../actions'
 
 
@@ -157,6 +165,96 @@ export const job_apps = (state = {
         ...state,
         appIdJobDataMap: Object.assign({}, state["appIdJobDataMap"], action.payload)
       }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      case ADD_TO_APP_ARRAY:
+        return {
+          ...state,
+          "appDataArray": [...state["appDataArray"], action.app],
+        };
+
+      case ADD_TO_APP_INDEXED_DATA:
+        return {
+          ...state,
+          appIndexedDataHash: Object.assign({}, state.appIndexedDataHash, action.appData)
+        }
+
+      case ADD_TO_APP_ID_JOB_ID_HASH:
+        return {
+          ...state,
+          appIdJobIdHash: Object.assign({}, state.appIdJobIdHash, action.appIdJobId)
+        }
+
+      case ADD_TO_JOB_ID_APP_ID_HASH:
+        return {
+          ...state,
+          jobIdAppIdHash: Object.assign({}, state.jobIdAppIdHash, action.jobIdAppId)
+        }
+
+        case ADD_TO_JOB_INDEXED_DATA:
+          return {
+            ...state,
+            jobIndexedDataHash: Object.assign({}, state.jobIndexedDataHash,
+            action.job_data)
+          }
+
+
+        case ADD_TO_MUSE_ID_JOB_ID_HASH:
+          return {
+            ...state,
+            museIdJobIdHash: Object.assign({}, state.museIdJobIdHash, action.muse_id_job_id)
+          }
+
+
+        case ADD_TO_JOB_ID_MUSE_ID_HASH:
+          return {
+            ...state,
+            jobIdMuseIdHash: Object.assign({}, state.jobIdMuseIdHash, action.job_id_muse_id)
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     case DELETE_APP_DATA_FROM_APP_ARRAY:
 
