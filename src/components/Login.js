@@ -5,7 +5,7 @@ import ls from 'local-storage'
 import {Redirect, withRouter} from 'react-router'
 import {loginCurrentUser} from '../services/api_calls'
 // import {loginUserAction,fetchCurrentUserAction} from '../actions'
-import {fetchCurrentUserAction,fetchJobAppsAction} from '../actions'
+import {fetchCurrentUserAction,fetchJobAppsAction, fetchJobAppsAction2} from '../actions'
 
 // import NoAuth from '../wrappers/NoAuth'
 
@@ -75,7 +75,8 @@ class Login extends React.Component {
       }
     })
     .then(jwt => this.props.fetchCurrentUserAction(jwt)) // returns user info
-    .then(user_id => this.props.fetchJobAppsAction(user_id)) // fetches user job data
+    // .then(user_id => this.props.fetchJobAppsAction(user_id)) // fetches user job data
+    .then(user_id => this.props.fetchJobAppsAction2())
     .then(res => {
       if (this.props.user.id) {
         return this.props.history.push("/")
@@ -106,7 +107,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({fetchCurrentUserAction,fetchJobAppsAction}, dispatch)
+  return bindActionCreators({fetchCurrentUserAction,fetchJobAppsAction, fetchJobAppsAction2}, dispatch)
 }
 
 // export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NoAuth(Login)))

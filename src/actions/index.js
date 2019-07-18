@@ -39,6 +39,7 @@ export function fetchCurrentUserAction(jwt) {
 }
 
 export function fetchJobAppsAction(user_id) {
+  console.log("amigettingcalled?")
   return(dispatch) => {
     return fetchUserJobApps(user_id)
     .then(json => {

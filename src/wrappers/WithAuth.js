@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import {Redirect, withRouter} from 'react-router'
 // import {loginUserAction, setTokenAction, fetchCurrentUserAction} from '../actions'
-import {fetchCurrentUserAction} from '../actions'
+import {fetchCurrentUserAction,fetchJobAppsAction2} from '../actions'
 import ls from 'local-storage'
 
 
@@ -17,7 +17,9 @@ export default function (WrappedComponent) {
     componentDidMount() {
        if (ls.get('jwt_token') && !this.props.user.id) {
         this.props.fetchCurrentUserAction(ls.get('jwt_token'))
-        .then(user_id => this.props.fetchJobAppsAction(user_id))
+        // .then(user_id => this.props.fetchJobAppsAction(user_id))
+        .then(user_id => this.props.fetchJobAppsAction2())
+
        }
     //   else {
     //     console.log("hi")
@@ -47,5 +49,5 @@ export default function (WrappedComponent) {
   }
 
 
-  return connect(mapStateToProps, {fetchCurrentUserAction})(WithAuth)
+  return connect(mapStateToProps, {fetchCurrentUserAction,fetchJobAppsAction2})(WithAuth)
 }

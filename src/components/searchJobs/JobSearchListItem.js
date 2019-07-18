@@ -11,14 +11,14 @@ const JobSearchListItem = (props) => {
   const toggleBookMark = () => {
     if (!props.saved) {
       return (
-        <i class="material-icons" onClick={() => props.createAppAction(props.job, props.user.id)}>
+        <i className="material-icons" onClick={() => props.createAppAction(props.job, props.user.id)}>
           bookmark_border
         </i>
       )
     } else {
       console.log(props)
       return (
-        <i class="material-icons" onClick={() => props.deleteAppAction(props.appId)}>
+        <i className="material-icons" onClick={() => props.deleteAppAction(props.appId)}>
           bookmark
         </i>
       )

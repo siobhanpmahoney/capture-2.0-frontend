@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {Redirect, withRouter} from 'react-router'
 
 import WithAuth from '../wrappers/WithAuth'
-import {fetchJobAppsAction} from '../actions'
+import {fetchJobAppsAction,fetchJobAppsAction2} from '../actions'
 import {convertAttrStrForDisplay} from '../utils/pref_regex'
 import {searchJobRequest} from '../services/the_muse_api'
 
@@ -99,7 +99,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({fetchJobAppsAction}, dispatch)
+  return bindActionCreators({fetchJobAppsAction2}, dispatch)
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(Home)))

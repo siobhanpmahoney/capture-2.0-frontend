@@ -108,29 +108,29 @@ class JobSearchContainer extends React.Component {
         <div>loading</div>
       )
     } else {
-      const appDataArray = this.props.job_apps.appDataArray
-      const appIndexedDataHash = this.props.job_apps.appIndexedDataHash
-      const appIdJobIdHash = this.props.job_apps.appIdJobIdHash
-      const jobIdAppIdHash = this.props.job_apps.jobIdAppIdHash
-      const jobIndexedDataHash = this.props.job_apps.jobIndexedDataHash
-const museIdJobIdHash = this.props.job_apps.museIdJobIdHash
-const jobIdMuseIdHash = this.props.job_apps.jobIdMuseIdHash
-
-      console.log("appDataArray", appDataArray)
-      console.log("appIndexedDataHash", appIndexedDataHash)
-      console.log("appIdJobIdHash", appIdJobIdHash)
-      console.log("jobIdAppIdHash", jobIdAppIdHash)
-
-      console.log("jobIndexedDataHash", jobIndexedDataHash,)
-      console.log("museIdJobIdHash", museIdJobIdHash,)
-      console.log("jobIdMuseIdHash", jobIdMuseIdHash)
+//       const appDataArray = this.props.job_apps.appDataArray
+//       const appIndexedDataHash = this.props.job_apps.appIndexedDataHash
+//       const appIdJobIdHash = this.props.job_apps.appIdJobIdHash
+//       const jobIdAppIdHash = this.props.job_apps.jobIdAppIdHash
+//       const jobIndexedDataHash = this.props.job_apps.jobIndexedDataHash
+// const museIdJobIdHash = this.props.job_apps.museIdJobIdHash
+// const jobIdMuseIdHash = this.props.job_apps.jobIdMuseIdHash
+//
+//       console.log("appDataArray", appDataArray)
+//       console.log("appIndexedDataHash", appIndexedDataHash)
+//       console.log("appIdJobIdHash", appIdJobIdHash)
+//       console.log("jobIdAppIdHash", jobIdAppIdHash)
+//
+//       console.log("jobIndexedDataHash", jobIndexedDataHash)
+//       console.log("museIdJobIdHash", museIdJobIdHash)
+//       console.log("jobIdMuseIdHash", jobIdMuseIdHash)
 
       return (
 
         <div className="job-search-container">
           <h1>Result Count: {this.state.jobResultArr.length}</h1>
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
-          <JobSearchList jobSearchResults = {this.state.jobResultArr} theMuseJobIdSavedStatusHash = {this.props.job_apps.theMuseJobIdSavedStatusHash} />
+          <JobSearchList jobSearchResults = {this.state.jobResultArr} museIdJobIdHash={this.props.museIdJobIdHash} />
 
 
         </div>
@@ -140,12 +140,27 @@ const jobIdMuseIdHash = this.props.job_apps.jobIdMuseIdHash
 }
 
 function mapStateToProps(state, props) {
-
   return {
     user: state.user,
-    job_apps: state.job_apps,
-    theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash
+    appArray: state.job_apps && state.job_apps.appArray,
+    theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash,
+    appIdJobDataMap: state.job_apps && state.job_apps.appIdJobDataMap,
+
+
+    appDataArray: state.job_apps && state.job_apps.appDataArray,
+    appIndexedDataHash: state.job_apps && state.job_apps.appIndexedDataHash,
+    appIdJobIdHash: state.job_apps && state.job_apps.appIdJobIdHash,
+    jobIdAppIdHash: state.job_apps && state.job_apps.jobIdAppIdHash,
+
+    jobIndexedDataHash: state.job_apps && state.job_apps.jobIndexedDataHash,
+    museIdJobIdHash: state.job_apps && state.job_apps.museIdJobIdHash,
+    jobIdMuseIdHash: state.job_apps && state.job_apps.jobIdMuseIdHash
   }
+  // return {
+  //   user: state.user,
+  //   job_apps: state.job_apps,
+  //   theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash
+  // }
 }
 
 function mapDispatchToProps(dispatch) {
