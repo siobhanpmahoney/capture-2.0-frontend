@@ -31,6 +31,14 @@ export const ADD_TO_JOB_INDEXED_DATA = 'ADD_TO_JOB_INDEXED_DATA'
 export const ADD_TO_MUSE_ID_JOB_ID_HASH = 'ADD_TO_MUSE_ID_JOB_ID_HASH'
 export const ADD_TO_JOB_ID_MUSE_ID_HASH = 'ADD_TO_JOB_ID_MUSE_ID_HASH'
 
+export const DELETE_FROM_APP_ARRAY = 'DELETE_FROM_APP_ARRAY'
+export const DELETE_FROM_APP_INDEXED_DATA = 'DELETE_FROM_APP_INDEXED_DATA'
+export const DELETE_FROM_APP_ID_JOB_ID_HASH = 'DELETE_FROM_APP_ID_JOB_ID_HASH'
+export const DELETE_FROM_JOB_ID_APP_ID_HASH = 'DELETE_FROM_JOB_ID_APP_ID_HASH'
+export const DELETE_FROM_JOB_INDEXED_DATA = 'DELETE_FROM_JOB_INDEXED_DATA'
+export const DELETE_FROM_MUSE_ID_JOB_ID_HASH = 'DELETE_FROM_MUSE_ID_JOB_ID_HASH'
+export const DELETE_FROM_JOB_ID_MUSE_ID_HASH = 'DELETE_FROM_JOB_ID_MUSE_ID_HASH'
+
 // make request for user data with jwt token as param ==> returns user data => store in redux
 export function fetchCurrentUserAction(jwt) {
   return(dispatch) => {
@@ -249,19 +257,59 @@ export function deleteAppAction(appData, userId) {
     return deleteApp(appData)
     .then(response => {
       console.log(response)
+      // dispatch({
+      //   type: DELETE_APP_DATA_FROM_APP_ARRAY,
+      //   payload: response
+      // })
+      //
+      // dispatch({
+      //   type: DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH,
+      //   payload: response
+      // })
+      //
+      // dispatch({
+      //   type: DELETE_APP_ID_FROM_JOB_DATA_MAP,
+      //   payload: response
+      // })
+      //
+      //
+
+
       dispatch({
-        type: DELETE_APP_DATA_FROM_APP_ARRAY,
-        payload: response
+        type: DELETE_FROM_APP_ARRAY,
+        app: response
       })
 
       dispatch({
-        type: DELETE_MUSE_ID_FROM_SAVED_STATUS_HASH,
-        payload: response
+        type: DELETE_FROM_APP_INDEXED_DATA,
+        id: response["id"]
+        // appData: {[response["id"]]: response}
       })
 
       dispatch({
-        type: DELETE_APP_ID_FROM_JOB_DATA_MAP,
-        payload: response
+        type: DELETE_FROM_APP_ID_JOB_ID_HASH,
+        appId: response["id"]
+        // appIdJobId: {[response["id"]]: response["job_id"]}
+      })
+
+      dispatch({
+        type: DELETE_FROM_JOB_ID_APP_ID_HASH,
+        jobID: response["job_id"]
+      })
+
+      dispatch({
+        type: DELETE_FROM_JOB_INDEXED_DATA,
+        jobId: response["job_id"]
+      })
+
+      dispatch({
+        type: DELETE_FROM_MUSE_ID_JOB_ID_HASH,
+        job_id: response["job_id"]
+      })
+
+      dispatch({
+        type: DELETE_FROM_JOB_ID_MUSE_ID_HASH,
+        jobId: response["job_id"]
       })
     })
   }

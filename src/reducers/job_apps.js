@@ -24,7 +24,15 @@ ADD_TO_APP_ID_JOB_ID_HASH,
 ADD_TO_JOB_ID_APP_ID_HASH,
 ADD_TO_JOB_INDEXED_DATA,
 ADD_TO_MUSE_ID_JOB_ID_HASH,
-ADD_TO_JOB_ID_MUSE_ID_HASH
+ADD_TO_JOB_ID_MUSE_ID_HASH,
+
+DELETE_FROM_APP_ARRAY,
+DELETE_FROM_APP_INDEXED_DATA,
+DELETE_FROM_APP_ID_JOB_ID_HASH,
+DELETE_FROM_JOB_ID_APP_ID_HASH,
+DELETE_FROM_JOB_INDEXED_DATA,
+DELETE_FROM_MUSE_ID_JOB_ID_HASH,
+DELETE_FROM_JOB_ID_MUSE_ID_HASH
 } from '../actions'
 
 
@@ -138,12 +146,9 @@ export const job_apps = (state = {
 
 
 
-
-
-
-
-
-
+// ====================
+//
+// ====================
 
 
     case ADD_APP_DATA_TO_APP_ARRAY: // adds to array
@@ -168,16 +173,9 @@ export const job_apps = (state = {
 
 
 
-
-
-
-
-
-
-
-
-
-
+// ===========================
+//
+// ===========================
 
 
       case ADD_TO_APP_ARRAY:
@@ -227,38 +225,11 @@ export const job_apps = (state = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ======================
+//
+// ======================
 
     case DELETE_APP_DATA_FROM_APP_ARRAY:
-
-
       let appArrayCopy = state.appArray.slice(0)
       let jobIndex = appArrayCopy.find((app, index, appArrayCopy) => {
         if (app.id == action.payload.id) {
@@ -275,6 +246,79 @@ export const job_apps = (state = {
 
       delete theMuseJobIdCopy[action.payload.job.muse_id]
       return Object.assign({}, state, {"theMuseJobIdSavedStatusHash": theMuseJobIdCopy})
+
+
+
+// =======================
+//
+// =======================
+
+case DELETE_FROM_APP_ARRAY:
+  let appDataArrayCopy = state.appDataArray.slice(0)
+  let jobIdx = appDataArrayCopy.find((app, index, appDataArrayCopy) => {
+    if (app.id == action.app.id) {
+      return index
+    }
+  })
+
+  return Object.assign({}, state, {"appDataArray": [...appDataArrayCopy.slice(0, jobIdx),... appDataArrayCopy.slice(jobIdx+1)]});
+
+
+  case DELETE_FROM_APP_INDEXED_DATA:
+    let appIndexedDataHashCopy = Object.assign({}, state.appIndexedDataHash)
+    delete appIndexedDataHashCopy[action.id]
+    return {
+      ...state,
+      appIndexedDataHash: Object.assign({}, appIndexedDataHashCopy)
+    }
+
+  case DELETE_FROM_APP_ID_JOB_ID_HASH:
+    let appIdJobIdHashCopy = Object.assign({}, state.appIdJobIdHash)
+    delete appIdJobIdHashCopy[action.appId]
+    return {
+      ...state,
+      appIdJobIdHash: Object.assign({}, appIdJobIdHashCopy)
+    }
+
+  case DELETE_FROM_JOB_ID_APP_ID_HASH:
+    let jobIdAppIdHashCopy = Object.assign({}, state.jobIdAppIdHash)
+    delete jobIdAppIdHashCopy[action.jobId]
+    return {
+      ...state,
+      jobIdAppIdHash: Object.assign({}, jobIdAppIdHashCopy)
+    }
+
+  case DELETE_FROM_JOB_INDEXED_DATA:
+    let jobIndexedDataHashCopy = Object.assign({}, state.jobIndexedDataHash)
+    delete jobIndexedDataHashCopy[action.jobId]
+    return {
+      ...state,
+      jobIndexedDataHash: Object.assign({}, jobIndexedDataHashCopy)
+    }
+
+case DELETE_FROM_MUSE_ID_JOB_ID_HASH:
+  let muse_id = state.jobIdMuseIdHash[action.job_id]
+  let museIdJobIdHashCopy = Object.assign({}, state.museIdJobIdHash)
+  delete museIdJobIdHashCopy[muse_id]
+  return {
+    ...state,
+    museIdJobIdHash: Object.assign({}, museIdJobIdHashCopy)
+  }
+
+case DELETE_FROM_JOB_ID_MUSE_ID_HASH:
+  let jobIdMuseIdHashCopy = Object.assign({}, state.jobIdMuseIdHash)
+  delete jobIdMuseIdHashCopy[action.jobId]
+  return {
+    ...state,
+    jobIdMuseIdHash: Object.assign({}, jobIdMuseIdHashCopy)
+  }
+
+
+
+
+
+
+
 
     default:
       return state;
