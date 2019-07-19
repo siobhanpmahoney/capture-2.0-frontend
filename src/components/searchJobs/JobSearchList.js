@@ -27,9 +27,9 @@ const JobSearchList = (props) => {
 function mapStateToProps(state, props) {
   return {
     user: state.user,
-    appArray: state.job_apps && state.job_apps.appArray,
-    theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash,
-    appIdJobDataMap: state.job_apps && state.job_apps.appIdJobDataMap,
+    // appArray: state.job_apps && state.job_apps.appArray,
+    // theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash,
+    // appIdJobDataMap: state.job_apps && state.job_apps.appIdJobDataMap,
 
 
     appDataArray: state.job_apps && state.job_apps.appDataArray,

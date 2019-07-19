@@ -54,7 +54,7 @@ class Home extends React.Component {
 
   formatsJobResultsObj = (response) => {
     return response.map((r) => {
-      if (!this.props.job_apps.theMuseJobIdSavedStatusHash[r.id]) {
+      if (!this.props.job_apps.museIdJobIdHash[r.id]) {
         return {
           name: r.name,
           landing_page: r.refs.landing_page,
@@ -82,7 +82,7 @@ class Home extends React.Component {
         <div>
           <div className="section-browse-jobs">
             <h3 className="section-header browse-jobs-section-header">Browse Jobs</h3>
-            <JobSearchList jobSearchResults = {this.state.jobSearchResults} theMuseJobIdSavedStatusHash = {this.props.job_apps.theMuseJobIdSavedStatusHash} />
+            <JobSearchList jobSearchResults = {this.state.jobSearchResults} />
           </div>
 
         </div>

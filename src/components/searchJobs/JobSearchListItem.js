@@ -64,7 +64,7 @@ function mapStateToProps(state, props) {
   return {
     user: state.user,
     job_apps: state.job_apps,
-    theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash
+    // theMuseJobIdSavedStatusHash: state.job_apps && state.job_apps.theMuseJobIdSavedStatusHash
   }
 }
 

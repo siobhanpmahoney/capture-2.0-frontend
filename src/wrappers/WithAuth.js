@@ -17,7 +17,6 @@ export default function (WrappedComponent) {
     componentDidMount() {
        if (ls.get('jwt_token') && !this.props.user.id) {
         this.props.fetchCurrentUserAction(ls.get('jwt_token'))
-        // .then(user_id => this.props.fetchJobAppsAction(user_id))
         .then(user_id => this.props.fetchJobAppsAction2())
 
        }
