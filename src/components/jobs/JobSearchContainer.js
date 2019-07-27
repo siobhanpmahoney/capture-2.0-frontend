@@ -20,7 +20,7 @@ class JobSearchContainer extends React.Component {
       resultPageCount: 0,
       currentPage: null,
       loadingState: true,
-      jobResultArr: [],
+      jobList: [],
       museIds: {},
       selectedFilters: {
         category: null,
@@ -58,7 +58,7 @@ class JobSearchContainer extends React.Component {
     const pref = Object.assign({}, this.state.selectedFilters)
     this.queryTheMuseJobsAPI(pref, pageNo, {})
     .then(response => this.setState({
-      jobResultArr: response.jobResultArr,
+      jobList: response.jobList,
       museIds: response.museIds,
       resultPageCount: response.pageCount,
       loadingState: false
@@ -69,7 +69,7 @@ class JobSearchContainer extends React.Component {
     return searchJobRequest(userPref, pageCount)
     .then(response => {
       const res = this.createJobArrForState(response.results, museIdsToCheck)
-      return {pageCount: response.page_count, jobResultArr: res.jobsForState, museIds: res.idsForState}
+      return {pageCount: response.page_count, jobList: res.jobsForState, museIds: res.idsForState}
     })
   }
 
@@ -95,7 +95,7 @@ class JobSearchContainer extends React.Component {
 
     this.setState({
       selectedFilters: filterState,
-      jobResultArr: [],
+      jobList: [],
       museIds: {},
       resultPageCount: 0,
     },() => this.updateJobSearchState(1))
@@ -111,9 +111,9 @@ class JobSearchContainer extends React.Component {
       return (
 
         <div className="job-search-container">
-          <h1>Result Count: {this.state.jobResultArr.length}</h1>
+          <h1>Result Count: {this.state.jobList.length}</h1>
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
-          <JobList jobSearchResults = {this.state.jobResultArr} museIdJobIdHash={this.props.museIdJobIdHash} />
+          <JobList jobList = {this.state.jobList} museIdJobIdHash={this.props.museIdJobIdHash} />
 
 
         </div>

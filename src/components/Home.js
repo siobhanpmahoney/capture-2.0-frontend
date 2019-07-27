@@ -16,14 +16,14 @@ class Home extends React.Component {
     super(props)
 
     this.state = {
-      jobSearchResults: [],
+      jobList: [],
       resPageCount: 0,
     }
   }
 
   componentDidMount() {
     const params = this.convertsAttrToObj()
-    this.fetchesJobSearchResults(params, 1)
+    this.fetchesjobList(params, 1)
   }
 
 
@@ -33,14 +33,14 @@ class Home extends React.Component {
     return convertAttrStrForDisplay({location: pref_locations, category: pref_categories, level: pref_levels})
   }
 
-  fetchesJobSearchResults = (params, pageNumber) => {
+  fetchesjobList = (params, pageNumber) => {
     searchJobRequest(params, pageNumber)
     .then(response => {
       let res = this.formatsJobResultsObj(response.results)
       let museLookUp = {}
       res.forEach((r) => museLookUp[r.muse_id] = true )
       return this.setState({
-        jobSearchResults: [...this.state.jobSearchResults,...res],
+        jobList: [...this.state.jobList,...res],
         resPageCount: response.page_count,
         museLookUp: Object.assign({}, this.state.museLookUp, museLookUp)
       })
@@ -82,7 +82,7 @@ class Home extends React.Component {
         <div>
           <div className="section-browse-jobs">
             <h3 className="section-header browse-jobs-section-header">Browse Jobs</h3>
-            <JobList jobSearchResults = {this.state.jobSearchResults} />
+            <JobList jobList = {this.state.jobList} />
           </div>
 
         </div>
