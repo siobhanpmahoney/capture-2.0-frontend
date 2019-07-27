@@ -1,10 +1,10 @@
 import React from 'react'
 import Select from 'react-select'
-import {searchOptions} from './searchOptions'
+import {jobSearchOptions} from './jobSearchOptions'
 
 const JobSearchForm = (props) => {
 
-  const options = searchOptions()
+  const options = jobSearchOptions()
 
   const mappedDefaults = () => {
     let mapped = {}

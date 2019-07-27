@@ -8,7 +8,7 @@ import {fetchJobAppsAction,fetchJobAppsAction2} from '../actions'
 import {convertAttrStrForDisplay} from '../utils/pref_regex'
 import {searchJobRequest} from '../services/the_muse_api'
 
-import JobSearchList from './searchJobs/JobSearchList'
+import JobList from './jobs/JobList'
 
 class Home extends React.Component {
 
@@ -82,7 +82,7 @@ class Home extends React.Component {
         <div>
           <div className="section-browse-jobs">
             <h3 className="section-header browse-jobs-section-header">Browse Jobs</h3>
-            <JobSearchList jobSearchResults = {this.state.jobSearchResults} />
+            <JobList jobSearchResults = {this.state.jobSearchResults} />
           </div>
 
         </div>

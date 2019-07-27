@@ -9,7 +9,7 @@ import {extractJobDataForDisplay} from '../../services/data_parsers'
 import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/pref_regex'
 import {searchJobRequest} from '../../services/the_muse_api'
 import JobSearchForm from './JobSearchForm'
-import JobSearchList from './JobSearchList'
+import JobList from './JobList'
 
 
 class JobSearchContainer extends React.Component {
@@ -113,7 +113,7 @@ class JobSearchContainer extends React.Component {
         <div className="job-search-container">
           <h1>Result Count: {this.state.jobResultArr.length}</h1>
           <JobSearchForm selectedFilters={this.state.selectedFilters} formListener={this.formListener} />
-          <JobSearchList jobSearchResults = {this.state.jobResultArr} museIdJobIdHash={this.props.museIdJobIdHash} />
+          <JobList jobSearchResults = {this.state.jobResultArr} museIdJobIdHash={this.props.museIdJobIdHash} />
 
 
         </div>

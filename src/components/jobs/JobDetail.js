@@ -1,6 +1,6 @@
 import React from 'react'
 
-class JobResultDetail extends React.Component {
+class JobDetail extends React.Component {
   constructor(props) {
     super(props)
 
@@ -13,4 +13,4 @@ class JobResultDetail extends React.Component {
   }
 }
 
-export default JobResultDetail
+export default JobDetail

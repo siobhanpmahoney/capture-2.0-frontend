@@ -3,8 +3,9 @@ import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Login from './components/Login'
 import Home from './components/Home'
 import NavBar from './components/nav/NavBar'
-import JobSearchContainer from './components/searchJobs/JobSearchContainer'
-import JobResultDetail from './components/searchJobs/JobResultDetail'
+import JobSearchContainer from './components/jobs/JobSearchContainer'
+import JobSavedContainer from './components/jobs/JobSavedContainer'
+import JobDetail from './components/jobs/JobDetail'
 import './App.css';
 
 class App extends Component {
@@ -18,11 +19,15 @@ class App extends Component {
             }} />
 
           <Route path="/jobs/search" render={(routerProps) => {
-                return <JobSearchContainer history={routerProps.history} />
-              }} />
+              return <JobSearchContainer history={routerProps.history} />
+            }} />
 
-            <Route path="/jobs/search/:museJobId" render={(routerProps) => {
-              return <JobResultDetail museJobId={routerProps.match.params.jobId} history={routerProps.history} />
+          <Route path="/jobs/search/:museJobId" render={(routerProps) => {
+              return <JobDetail museJobId={routerProps.match.params.jobId} history={routerProps.history} />
+            }} />
+
+          <Route path="/jobs/saved" render={(routerProps) => {
+              return <JobSavedContainer history={routerProps.history} />
             }} />
 
           <Route exact path='/login' render={(routerProps) => {

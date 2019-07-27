@@ -1,4 +1,4 @@
-export const searchOptions = () => {
+export const jobSearchOptions = () => {
   return {
     level: [
       {

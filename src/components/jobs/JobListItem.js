@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import WithAuth from '../../wrappers/WithAuth'
 
-const JobSearchListItem = (props) => {
+const JobListItem = (props) => {
   const toggleBookMark = () => {
     if (!props.saved) {
       return (
@@ -72,6 +72,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({createAppAction, deleteAppAction}, dispatch)
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobSearchListItem)))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobListItem)))
 
-// export default JobSearchListItem
+// export default JobListItem

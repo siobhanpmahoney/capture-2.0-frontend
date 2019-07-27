@@ -1,5 +1,5 @@
 import React from 'react'
-import JobSearchListItem from './JobSearchListItem'
+import JobListItem from './JobListItem'
 import {createAppAction} from '../../actions'
 import { bindActionCreators } from 'redux';
 import {withRouter, Link} from 'react-router-dom'
@@ -8,14 +8,14 @@ import { connect } from 'react-redux';
 import WithAuth from '../../wrappers/WithAuth'
 
 
-const JobSearchList = (props) => {
+const JobList = (props) => {
   if (!!props.museIdJobIdHash) {
     return (
       <div className="job-search-list">
         {props.jobSearchResults.map((j) => {
           let app = !!props.museIdJobIdHash[j.muse_id] ? props.appIndexedDataHash[props.jobIdAppIdHash[props.museIdJobIdHash[j.muse_id]]] : null
           let appId = (!!app && app.id) ? app.id : null
-          return <JobSearchListItem job={j} app = {app} key={j.muse_id} saved={!!props.museIdJobIdHash[j.muse_id]} appId = {appId}/>
+          return <JobListItem job={j} app = {app} key={j.muse_id} saved={!!props.museIdJobIdHash[j.muse_id]} appId = {appId}/>
         })}
 
       </div>
@@ -52,4 +52,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({createAppAction}, dispatch)
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobSearchList)))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobList)))
