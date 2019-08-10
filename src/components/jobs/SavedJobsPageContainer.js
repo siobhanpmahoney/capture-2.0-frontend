@@ -10,7 +10,7 @@ import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/
 import JobSearchForm from './JobSearchForm'
 import JobList from './JobList'
 
-class JobSavedContainer extends React.Component {
+class SavedJobsPageContainer extends React.Component {
   constructor(props) {
     super(props)
 
@@ -23,13 +23,11 @@ class JobSavedContainer extends React.Component {
   componentDidMount() {
     this.props.fetchJobAppsAction2()
     .then(res => {
-      console.log(this.props)
       return this.props.appDataArray.map((app) => {
         return this.props.jobIndexedDataHash[app.job_id]
       })
     })
     .then(jobs => {
-      console.log(jobs)
       return this.setState({
         jobList: jobs
       }, this.updateLoadingState)
@@ -89,4 +87,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({fetchJobAppsAction2}, dispatch)
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobSavedContainer)))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(SavedJobsPageContainer)))

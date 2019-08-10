@@ -9,7 +9,9 @@ import WithAuth from '../../wrappers/WithAuth'
 
 const JobListItem = (props) => {
   const toggleBookMark = () => {
-    if (!props.saved) {
+     let app_id = !!props.job_apps.jobIdAppIdHash[props.job_apps.museIdJobIdHash[props.job.muse_id]] ? props.job_apps.jobIdAppIdHash[props.job_apps.museIdJobIdHash[props.job.muse_id]] : null
+    // if (!props.saved) {
+    if (!app_id) {
       return (
         <i className="material-icons" onClick={() => props.createAppAction(props.job, props.user.id)}>
           bookmark_border
@@ -17,13 +19,13 @@ const JobListItem = (props) => {
       )
     } else {
       return (
-        <i className="material-icons" onClick={() => props.deleteAppAction(props.appId)}>
+        <i className="material-icons" onClick={() => props.deleteAppAction(props.job_apps.jobIdAppIdHash[props.job_apps.museIdJobIdHash[props.job.muse_id]])}>
           bookmark
         </i>
       )
     }
   }
-
+  const job = props.job
 
   return (
     <div className="job-search-results-item-wrapper">
@@ -52,6 +54,11 @@ const JobListItem = (props) => {
         <div className="job-list-item-date">
           {props.job.publication_date}
         </div>
+
+      </div>
+
+      <div className="button job-read-more">
+        <button onClick={() => props.history.push(`/jobs/search/${props.job.muse_id}`)} job={props.job}>cleeeeeek</button>
 
       </div>
 

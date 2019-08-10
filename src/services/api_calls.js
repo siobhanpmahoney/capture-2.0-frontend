@@ -118,6 +118,7 @@ export const createJob = (job_params) => {
 
 // job_id, user_id
 export const createApp = (app_params) => {
+  console.log("app_params: ", app_params)
   const apps_url = `${API_ROOT}/apps`
   return fetch(apps_url, {
     method: 'POST',
@@ -126,6 +127,7 @@ export const createApp = (app_params) => {
   })
   .then(response => response.json())
 }
+
 
 export const deleteApp = (appId) => {
   const apps_url = `${API_ROOT}/apps/${appId}`

@@ -124,6 +124,7 @@ export function createAppAction(jobData, userId) {
       let job = Object.assign({}, jobData, {company_id: company_data.id})
       return createJob(job)
         .then(job_data => {
+          console.log("job_data: ", job_data)
           createApp({user_id: userId, job_id: job_data.id})
             .then(response => {
               let museId = job_data.muse_id

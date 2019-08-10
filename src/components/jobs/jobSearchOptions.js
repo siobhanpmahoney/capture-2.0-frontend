@@ -105,28 +105,8 @@ export const jobSearchOptions = () => {
     ],
     location: [
       {
-        label: 'Phoenix, AZ',
-        value: 'Phoenix, AZ'
-      },
-      {
-        label: 'Berkeley, CA',
-        value: 'Berkeley, CA'
-      },
-      {
-        label: 'Cupertino, CA',
-        value: 'Cupertino, CA'
-      },
-      {
         label: 'Los Angeles, CA',
         value: 'Los Angeles, CA'
-      },
-      {
-        label: 'Mountain View, CA',
-        value: 'Mountain View, CA'
-      },
-      {
-        label: 'Oakland, CA',
-        value: 'Oakland, CA'
       },
       {
         label: 'San Diego, CA',
@@ -137,80 +117,12 @@ export const jobSearchOptions = () => {
         value: 'San Francisco, CA'
       },
       {
-        label: 'San Jose, CA',
-        value: 'San Jose, CA'
-      },
-      {
-        label: 'San Mateo, CA',
-        value: 'San Mateo, CA'
-      },
-      {
-        label: 'Santa Ana, CA',
-        value: 'Santa Ana, CA'
-      },
-      {
-        label: 'Santa Barbara, CA',
-        value: 'Santa Barbara, CA'
-      },
-      {
-        label: 'Santa Clara, CA',
-        value: 'Santa Clara, CA'
-      },
-      {
-        label: 'Santa Cruz, CA',
-        value: 'Santa Cruz, CA'
-      },
-      {
-        label: 'Santa Monica, CA',
-        value: 'Santa Monica, CA'
-      },
-      {
         label: 'Washington, DC',
         value: 'Washington, DC'
       },
       {
-        label: 'Dover, DE',
-        value: 'Dover, DE'
-      },
-      {
-        label: 'Atlanta, GA',
-        value: 'Atlanta, GA'
-      },
-      {
-        label: 'Athens, GA',
-        value: 'Athens, GA'
-      },
-      {
-        label: 'Savannah, GA',
-        value: 'Savannah, GA'
-      },
-      {
         label: 'Minneapolis, MN',
         value: 'Minneapolis, MN'
-      },
-      {
-        label: 'Saint Paul, MN',
-        value: 'Saint Paul, MN'
-      },
-      {
-        label: 'Charlotte, NC',
-        value: 'Charlotte, NC'
-      },
-      {
-        label: 'Durham, NC',
-        value: 'Durham, NC'
-      },
-      {
-        label: 'Greensboro, NC',
-        value: 'Greensboro, NC'
-      },
-      {
-        label: 'Raleigh, NC',
-        value: 'Raleigh, NC'
-      },
-      {
-        label: 'Las Vegas, NV',
-        value: 'Las Vegas, NV'
       },
       {
         label: 'Brooklyn, NY',
@@ -240,22 +152,7 @@ export const jobSearchOptions = () => {
         label: 'Pittsburgh, PA',
         value: 'Pittsburgh, PA'
       },
-      {
-        label: 'Charleston, SC',
-        value: 'Charleston, SC'
-      },
-      {
-        label: 'Columbia, SC',
-        value: 'Columbia, SC'
-      },
-      {
-        label: 'Greenville, SC',
-        value: 'Greenville, SC'
-      },
-      {
-        label: 'Greenwood, SC',
-        value: 'Greenwood, SC'
-      },
+
       {
         label: 'Nashville, TN',
         value: 'Nashville, TN'
@@ -289,24 +186,12 @@ export const jobSearchOptions = () => {
         value: 'Richmond, VA'
       },
       {
-        label: 'Burlington, VT',
-        value: 'Burlington, VT'
-      },
-      {
-        label: 'Olympia, WA',
-        value: 'Olympia, WA'
-      },
-      {
         label: 'Seattle, WA',
         value: 'Seattle, WA'
       },
       {
         label: 'Tacoma, WA',
         value: 'Tacoma, WA'
-      },
-      {
-        label: 'Vancouver, WA',
-        value: 'Vancouver, WA'
       }
     ]
   }

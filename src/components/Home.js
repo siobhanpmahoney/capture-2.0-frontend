@@ -1,7 +1,7 @@
 import React from 'react'
+import {Redirect, withRouter} from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {Redirect, withRouter} from 'react-router'
 
 import WithAuth from '../wrappers/WithAuth'
 import {fetchJobAppsAction,fetchJobAppsAction2} from '../actions'
@@ -94,7 +94,15 @@ class Home extends React.Component {
 function mapStateToProps(state, props) {
   return {
     user: state.user,
-    job_apps: state.job_apps
+    job_apps: state.job_apps,
+    appDataArray: state.job_apps && state.job_apps.appDataArray,
+    appIndexedDataHash: state.job_apps && state.job_apps.appIndexedDataHash,
+    appIdJobIdHash: state.job_apps && state.job_apps.appIdJobIdHash,
+    jobIdAppIdHash: state.job_apps && state.job_apps.jobIdAppIdHash,
+
+    jobIndexedDataHash: state.job_apps && state.job_apps.jobIndexedDataHash,
+    museIdJobIdHash: state.job_apps && state.job_apps.museIdJobIdHash,
+    jobIdMuseIdHash: state.job_apps && state.job_apps.jobIdMuseIdHash
   }
 }
 

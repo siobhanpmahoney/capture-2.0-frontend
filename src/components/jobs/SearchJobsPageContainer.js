@@ -12,7 +12,7 @@ import JobSearchForm from './JobSearchForm'
 import JobList from './JobList'
 
 
-class JobSearchContainer extends React.Component {
+class SearchJobsPageContainer extends React.Component {
   constructor(props) {
     super(props)
     this.props.fetchJobAppsAction2()
@@ -150,4 +150,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({fetchJobAppsAction2}, dispatch)
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(JobSearchContainer)))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WithAuth(SearchJobsPageContainer)))

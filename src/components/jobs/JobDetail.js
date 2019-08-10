@@ -6,9 +6,10 @@ class JobDetail extends React.Component {
 
     this.state = {}
   }
+
   render() {
     return (
-      <div></div>
+      <div>here, yo.</div>
     )
   }
 }
