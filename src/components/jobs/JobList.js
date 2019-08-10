@@ -10,7 +10,6 @@ import WithAuth from '../../wrappers/WithAuth'
 
 const JobList = (props) => {
   if (!!props.museIdJobIdHash) {
-    console.log("JobList props: ", props)
     return (
       <div className="job-search-list">
         {props.jobList.map((j) => {

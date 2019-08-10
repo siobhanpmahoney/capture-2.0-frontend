@@ -51,11 +51,16 @@ class JobItemPageContainer extends React.Component {
   }
 
   render() {
-    return (
-      <div className="job-item-page-container">
-        <JobDetail job={this.state.job}/>
-      </div>
-    )
+    if (!this.state.job) {
+      return <div className="loading">loading</div>
+    } else {
+      return (
+        <div className="job-item-page-container">
+          <JobDetail job={this.state.job} app={this.state.app}/>
+        </div>
+      )
+    }
+
   }
 }
 
