@@ -7,9 +7,11 @@ import { connect } from 'react-redux';
 
 import WithAuth from '../wrappers/WithAuth'
 import {fetchJobAppsAction2} from '../actions'
-import {extractJobDataForDisplay} from '../services/data_parsers'
+import {extractJobDataForDisplay, parseCompanyDataAPIResponse} from '../services/data_parsers'
 import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../utils/pref_regex'
-import {searchJobRequest, getJobMuseData} from '../services/the_muse_api'
+import {searchJobRequest, getJobMuseData, fetchCompanyData} from '../services/the_muse_api'
+
+import CompanyDetailsContainer from './companies/CompanyDetailsContainer'
 
 
 
@@ -31,17 +33,30 @@ class JobItemPageContainer extends React.Component {
 
     this.state = {
       job: null,
-      app: null
+      app: null,
+      company: null
     }
   }
 
   componentDidMount() {
     if (this.props.type == "search") {
+      let job = null
       getJobMuseData(this.props.muse_id)
       .then(json => extractJobDataForDisplay(json))
-      .then(jobData => this.setState({
-        job: jobData
-      }))
+      // .then(jobData => this.setState({
+      //   job: jobData
+      // }))
+      .then(jobData => {
+        return job = jobData
+      })
+      .then(job => fetchCompanyData(job.company_muse_id))
+      .then(companyData => {
+        console.log(parseCompanyDataAPIResponse(companyData))
+        this.setState({
+          job: job,
+          company: companyData
+        })
+      })
     } else if (this.props.type=="saved") {
       this.setState({
         job: this.props.jobIndexedDataHash[this.props.id],
@@ -57,6 +72,7 @@ class JobItemPageContainer extends React.Component {
       return (
         <div className="job-item-page-container">
           <JobDetail job={this.state.job} app={this.state.app}/>
+          <CompanyDetailsContainer company={this.state.company} />
         </div>
       )
     }
