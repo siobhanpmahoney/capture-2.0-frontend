@@ -14,16 +14,49 @@ class CompanyDetails extends React.Component {
   componentDidMount() {
     if (!!this.props.company) {
       fetchNewsArticles(this.props.company.name, this.props.company.description)
-      .then(json => console.log(json))
+      .then(json => {
+        let newsArticles = []
+        let pressReleases = []
+        for (let result of json.articles) {
+          if (result.source.name == "Businesswire.com" || result.source.name == "Prnewswire.com" || result.source.name == "Reuters") {
+            pressReleases.push(result)
+          } else {
+            newsArticles.push(result)
+          }
+        }
+        return this.setState({
+          articles: newsArticles,
+          pressReleases: pressReleases
+        })
+      })
     }
   }
 
 
   render() {
-    return (
-      <div className="company-details">
-      </div>
-    )
+    if (this.state.articles == null || this.state.pressReleases == null) {
+        return (
+          <div className="company-details">
+          </div>
+        )
+      } else {
+      return (
+        <div className="company-details">
+          { this.state.articles.length > 0 &&
+            <div className="news-articles-wrappers">
+              <h3>Recent News</h3>
+              {this.state.articles.map((article) => {
+                return <div>{article.title}</div>
+              })}
+            </div>
+          }
+
+
+          <div className="press-releases-wrappers">
+          </div>
+        </div>
+      )
+    }
   }
 }
 
