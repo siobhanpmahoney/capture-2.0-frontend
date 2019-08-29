@@ -9,7 +9,6 @@ import {fetchJobAppsAction2} from '../../actions'
 // import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/pref_regex'
 
 const JobDetail = (props) => {
-  console.log(props)
   return (
     <div className="job-detail-component">
       <div className="job-title">

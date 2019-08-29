@@ -10,11 +10,15 @@ export const convertAttrStrForQuery = (attributeObj) => {
     if (attributeObj[k] != null) {
       return _helperConvertAttrStrForQuery(k, attributeObj[k])
     }
+  // })
   }).filter((i) => !!i).join("&")
 }
 
 const _helperConvertAttrStrForQuery = (queryKey, attributeString) => {
     let string = `${queryKey}=${attributeString}`
+    let x = string.split("|").join(`&${queryKey}=`)
+    console.log(x)
+    debugger
     return string.split("|").join(`&${queryKey}=`)
 }
 

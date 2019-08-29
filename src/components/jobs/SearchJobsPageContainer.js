@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import WithAuth from '../../wrappers/WithAuth'
 import {fetchJobAppsAction2} from '../../actions'
 import {extractJobDataForDisplay} from '../../services/data_parsers'
-import {convertAttrStrForDisplay, convertDisplayToQueryParam} from '../../utils/pref_regex'
+import {convertAttrStrForDisplay, convertDisplayToQueryParam, convertAttrStrForQuery} from '../../utils/pref_regex'
 import {searchJobRequest} from '../../services/the_muse_api'
 import JobSearchForm from './JobSearchForm'
 import JobList from './JobList'
@@ -43,6 +43,7 @@ class SearchJobsPageContainer extends React.Component {
   }
 
   userPreferenceParser = () => {
+    console.log("raw pref from state", this.props.user.pref_categories)
     let parsed = {
       category: this.props.user.pref_categories,
       level: this.props.user.pref_levels,
@@ -54,8 +55,28 @@ class SearchJobsPageContainer extends React.Component {
   }
 
 
+// listens to changes made in search form => passes criteria to this.updateJobSearchState() to make call to theMuse API with updated criteria
+  formListener = (event, criteria) => {
+    let name = criteria
+    let vals = event.map((e) => e.value)
+    let filterState = Object.assign({}, this.state.selectedFilters)
+
+    filterState[criteria] = vals
+
+    this.setState({
+      selectedFilters: filterState,
+      jobList: [],
+      museIds: {},
+      resultPageCount: 0,
+    },() => this.updateJobSearchState(1))
+  }
+
+
+// updates jobList state based on search results
   updateJobSearchState = (pageNo) => {
     const pref = Object.assign({}, this.state.selectedFilters)
+
+
     this.queryTheMuseJobsAPI(pref, pageNo, {})
     .then(response => this.setState({
       jobList: response.jobList,
@@ -65,6 +86,13 @@ class SearchJobsPageContainer extends React.Component {
     }))
   }
 
+  addSearchParamsToRouter = () => {
+    if (!!this.state.loadingState) {
+
+    }
+  }
+
+// helper fn that calls servicefn making call to the MuseAPI
   queryTheMuseJobsAPI = (userPref, pageCount, museIdsToCheck) => {
     return searchJobRequest(userPref, pageCount)
     .then(response => {
@@ -86,20 +114,7 @@ class SearchJobsPageContainer extends React.Component {
     return Object.assign({}, {jobsForState: job_data, idsForState: museIds2})
   }
 
-  formListener = (event, criteria) => {
-    let name = criteria
-    let vals = event.map((e) => e.value)
-    let filterState = Object.assign({}, this.state.selectedFilters)
 
-    filterState[criteria] = vals
-
-    this.setState({
-      selectedFilters: filterState,
-      jobList: [],
-      museIds: {},
-      resultPageCount: 0,
-    },() => this.updateJobSearchState(1))
-  }
 
 
   render() {
