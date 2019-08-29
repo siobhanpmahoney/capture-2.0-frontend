@@ -68,7 +68,7 @@ class SearchJobsPageContainer extends React.Component {
       jobList: [],
       museIds: {},
       resultPageCount: 0,
-    },() => this.updateJobSearchState(1))
+    },() => this.updateJobSearchState(1)) 
   }
 
 
