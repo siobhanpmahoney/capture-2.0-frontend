@@ -67,8 +67,8 @@ class SearchJobsPageContainer extends React.Component {
   formListener = (event, criteria) => {
     let name = criteria
     let vals = !!event ? event.map((e) => e.value) : []
-    let filterState = Object.assign({}, this.state.selectedFilters)
 
+    let filterState = Object.assign({}, this.state.selectedFilters)
     filterState[criteria] = vals
 
     this.setState({
@@ -82,9 +82,9 @@ class SearchJobsPageContainer extends React.Component {
 
 // updates jobList state based on search results
   updateJobSearchState = (pageNo) => {
+    let queryString = convertDisplayToQueryParam(this.state.selectedFilters)
+    this.props.history.replace(`/jobs/search?${queryString.slice(1)}`)
     const pref = Object.assign({}, this.state.selectedFilters)
-
-
     this.queryTheMuseJobsAPI(pref, pageNo, {})
     .then(response => this.setState({
       jobList: response.jobList,
