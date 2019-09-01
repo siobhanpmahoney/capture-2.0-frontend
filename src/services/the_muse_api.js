@@ -6,6 +6,7 @@ const MUSE_API = `https://www.themuse.com/api/public/jobs`
 
 // param obj as arg
 export const searchJobRequest = (param_obj, pageNo) => {
+  
   let url = `${MUSE_API}?api_key=${MUSE_KEY}&page=${pageNo}${convertDisplayToQueryParam(param_obj)}`
   return fetch(url).then(res => res.json())
 }

@@ -58,7 +58,7 @@ class SearchJobsPageContainer extends React.Component {
 // listens to changes made in search form => passes criteria to this.updateJobSearchState() to make call to theMuse API with updated criteria
   formListener = (event, criteria) => {
     let name = criteria
-    let vals = event.map((e) => e.value)
+    let vals = !!event ? event.map((e) => e.value) : []
     let filterState = Object.assign({}, this.state.selectedFilters)
 
     filterState[criteria] = vals
@@ -68,7 +68,7 @@ class SearchJobsPageContainer extends React.Component {
       jobList: [],
       museIds: {},
       resultPageCount: 0,
-    },() => this.updateJobSearchState(1)) 
+    },() => this.updateJobSearchState(1))
   }
 
 
