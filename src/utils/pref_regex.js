@@ -6,6 +6,7 @@
 
 //convert usr pref attributes into query params for the_muse_api
 export const convertAttrStrForQuery = (attributeObj) => {
+  console.log(attributeObj)
   return Object.keys(attributeObj).map((k) => {
     if (attributeObj[k] != null && attributeObj[k] != "") {
       return _helperConvertAttrStrForQuery(k, attributeObj[k])

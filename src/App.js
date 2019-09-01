@@ -22,7 +22,7 @@ class App extends Component {
               return <SearchJobsPageContainer history={routerProps.history} />
             }} />
 
-          <Route path="/jobs/search?:searchParams" render={(routerProps) => {
+          <Route path="/jobs/search?category=:searchParams" render={(routerProps) => {
                 return <SearchJobsPageContainer searchParams={routerProps.match.params.searchParams} history={routerProps.history} />
             }} />
 

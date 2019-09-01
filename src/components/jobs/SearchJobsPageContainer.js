@@ -32,9 +32,18 @@ class SearchJobsPageContainer extends React.Component {
   }
 
   componentDidMount() {
+
+    let search = this.props.location.search
+    let params = new URLSearchParams(search)
+
     if (!!this.props.user) {
-      const defaultPreferences = this.userPreferenceParser()
-      const filterState =  Object.assign({}, defaultPreferences)
+      // const defaultPreferences = this.userPreferenceParser()
+      // const filterState =  Object.assign({}, defaultPreferences)
+      let filterState = {}
+      for (let k of params.keys()) {
+        filterState[k] = params.getAll(k)
+      }
+      console.log(filterState)
       this.setState({
         loadingState:true,
         selectedFilters: filterState
@@ -43,7 +52,6 @@ class SearchJobsPageContainer extends React.Component {
   }
 
   userPreferenceParser = () => {
-    console.log("raw pref from state", this.props.user.pref_categories)
     let parsed = {
       category: this.props.user.pref_categories,
       level: this.props.user.pref_levels,
